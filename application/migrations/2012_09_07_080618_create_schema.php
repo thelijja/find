@@ -13,6 +13,9 @@ class Create_Schema {
 		$this->createProductFeatureCategoryTable_0020();
 		$this->createProductFeatureTable_0030();	
 		$this->createProductTable_0040();	
+		$this->createProductMediaTable_0050();
+		$this->createProductContactTable_0060();
+		$this->createProductFeatureSet_0070();
 	}
 
 	/**
@@ -22,10 +25,79 @@ class Create_Schema {
 	 */
 	public function down()
 	{
+		$this->dropProductFeatureSet_0070();
+		$this->dropProductContactTable_0060();
+		$this->dropProductMediaTable_0050();
 		$this->dropProductTable_0040();
 		$this->dropProductFeatureTable_0030();
 		$this->droproductFeatureCategoryTable_0020();
 		$this->dropProductCategoryTable_0010();				
+	}
+
+	private function createProductFeatureSet_0070() {
+		Schema::create('flk_product_feature_set', function($t){
+			$t->integer('product_id')->unsigned();
+			$t->integer('feature_id')->unsigned();
+			$t->string('val_str',100)->nullable();
+			$t->integer('val_int')->nullable();
+			$t->boolean('val_bool')->nullable();
+			$t->date('val_date')->nullable();
+			$t->float('val_flt')->nullable();
+
+			// Defining primary key..
+			$t->primary(array('product_id', 'feature_id'));
+
+			// Foreign keys...
+			$t->foreign('product_id')->references('id')->on('flk_product');
+			$t->foreign('feature_id')->references('id')->on('flk_product_feature');
+
+		});
+	}
+
+	private function dropProductFeatureSet_0070() {
+		Schema::drop('flk_product_feature_set');
+	}
+
+	private function createProductContactTable_0060() {
+		Schema::create('flk_product_contact', function($t){
+			$t->increments('id')->unsigned();
+			$t->integer('product_id')->unsigned();
+			$t->string('mobile',20)->nullable();
+			$t->string('land',20)->nullable();
+			$t->string('email',100);
+			$t->string('address')->nullable();
+			$t->string('suburb')->nullable();
+			$t->string('postcode')->nullable();
+			$t->string('country')->nullable();
+
+			// Foreign key references
+			$t->foreign('product_id')->references('id')->on('flk_product');
+		});
+	}
+
+
+	private function dropProductContactTable_0060() {
+		Schema::drop('flk_product_contact');
+	}
+
+
+	private function createProductMediaTable_0050() {
+		Schema::create('flk_product_media', function($t){
+			$t->increments('id')->unsigned();
+			$t->integer('product_id')->unsigned();
+			$t->string('media_path',400);
+			$t->string('media_type',30);
+
+			// Foreign key references
+			$t->foreign('product_id')->references('id')->on('flk_product');
+
+			// Adding indexes
+			$t->index('product_id');
+		});
+	}
+
+	private function dropProductMediaTable_0050() {
+		Schema::drop('flk_product_media');
 	}
 
 
@@ -72,6 +144,8 @@ class Create_Schema {
 		Schema::create('flk_product_feature', function($t) {
 			$t->increments('id')->unsigned();
 			$t->string('name', 100);
+			$t->integer('data_type')->unsigned()->default(0);
+			$t->integer('importance')->default(0);
 			$t->text('description');
 			$t->integer('product_category_id')->unsigned()->nullable();
 			$t->integer('feature_category_id')->unsigned()->nullable();

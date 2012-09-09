@@ -2,7 +2,7 @@
 
 class ProductCategories extends Backbone.Collection
 	model:app.ProductCategory
-	url:'productcategories/categories'
+	url:'api/admin/categories/'
 	
 @app = window.app ? {}
 @app.ProductCategories = ProductCategories;

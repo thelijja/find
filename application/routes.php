@@ -1,7 +1,7 @@
 <?php
 
 // Registering routes related to Product Categories
-Route::controller('productcategory');
+Route::any('api/admin/categories/(:any?)', array('as'=> 'admin.categories', 'uses' => 'productcategory@index'));
 
 
 /*

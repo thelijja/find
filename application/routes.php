@@ -1,5 +1,9 @@
 <?php
 
+// Registering routes related to Product Categories
+Route::controller('productcategory');
+
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes

@@ -5,7 +5,10 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<title>Laravel: A Framework For Web Artisans</title>
 	<meta name="viewport" content="width=device-width">
-	{{ HTML::style('laravel/css/style.css') }}
+	{{ HTML::style('css/lib/bootstrap.min.css') }}
+	{{ HTML::style('css/lib/bootstrap-responsive.min.css') }}
+	<!-- application styles -->
+	{{ HTML::style('css/base/style.css') }}
 </head>
 <body>
 	<div class="wrapper">
@@ -53,5 +56,15 @@
 			</div>
 		</div>
 	</div>
+	<!-- Java script libraries -->
+	{{ HTML::script('js/lib/jquery-1.8.1.min.js')}}
+	{{ HTML::script('js/lib/underscore-min.js')}}
+	{{ HTML::script('js/lib/bootstrap.min.js')}}
+	{{ HTML::script('js/lib/backbone-min.js')}}
+	<!-- Javascript application -->
+	{{ HTML::script('js/admin/models.js') }}
+	{{ HTML::script('js/admin/collections.js') }}
+	{{ HTML::script('js/admin/admin.js') }}
+	
 </body>
 </html>

@@ -1,8 +1,17 @@
 <?php
 
-// Registering routes related to Product Categories
-Route::any('api/admin/categories/(:any?)', array('as'=> 'admin.categories', 'uses' => 'productcategory@index'));
+/*
+ * API routes
+ */
 
+// Registering routes related to Product Categories
+Route::any('api/admin/categories/(:any?)', array('as'=> 'api.admin.categories', 'uses' => 'api.admin@category'));
+
+
+/*
+ * Admin page routes
+ */
+Route::controller('admin');
 
 /*
 |--------------------------------------------------------------------------

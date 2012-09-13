@@ -116,15 +116,19 @@
       var model, that;
       that = this;
       model = view.model;
-      return model.destroy({
-        wait: true,
-        success: function() {
-          return view.remove();
-        },
-        error: function(rmodel, errors) {
-          return that.showError('Error in deleting item..');
-        }
-      });
+      if (!model.id) {
+        return view.remove();
+      } else {
+        return model.destroy({
+          wait: true,
+          success: function() {
+            return view.remove();
+          },
+          error: function(rmodel, errors) {
+            return that.showError('Error in deleting item..');
+          }
+        });
+      }
     };
 
     CategoryResultView.prototype.itemEdit = function(view) {

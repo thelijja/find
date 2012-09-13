@@ -9,7 +9,7 @@ class CategorySearchView extends app.BaseView
 		'click .btn-clear': 'clear'
 		
 	initialize:->		
-		@$el.empty();	# Clear this area if it is already occupied by different view
+		@$el.empty();									# Clear this area if it is already occupied by different view
 		@$el.html($('#tpl-category-search').html())		
 		@render()
 		
@@ -30,7 +30,7 @@ class CategoryResultView extends app.BaseView
 	
 	initialize:->
 		@collection.on 'reset', @render, @
-		@$el.empty();	# Clear this area if it is already occupied by different view
+		@$el.empty();									# Clear this area if it is already occupied by different view
 		@$el.html($('#tpl-category-results').html())		
 		@render()
 		
@@ -47,7 +47,7 @@ class CategoryResultView extends app.BaseView
 		
 	createCategory:->
 		cat = new app.ProductCategory code:'', name: ''
-		cat.on 'save', @itemSave, @			# We need to be motified when item is done and saved..
+		cat.on 'save', @itemSave, @						# We need to be motified when item is done and saved..
 		cat.on 'delete', @itemDelete, @
 		cat.on 'edit', @itemEdit, @
 		catEditView = new app.ProductCategoryEditView model:cat
@@ -55,7 +55,7 @@ class CategoryResultView extends app.BaseView
 		
 	itemSave:(view) ->
 		that = @
-		model = view.model						# Get the model who triggered the event
+		model = view.model								# Get the model who triggered the event
 		model.save null,
 			wait:true
 			success: (rmodel, response) ->								
@@ -74,10 +74,13 @@ class CategoryResultView extends app.BaseView
 		# Delete item from the server......
 		that = @
 		model = view.model
-		model.destroy
-			wait:true
-			success: -> view.remove()
-			error: (rmodel, errors) -> that.showError('Error in deleting item..');
+		if not model.id
+			view.remove()							# Just remove the view no need to send server call
+		else
+			model.destroy
+				wait:true
+				success: -> view.remove()
+				error: (rmodel, errors) -> that.showError('Error in deleting item..');
 		
 	itemEdit:(view) ->
 		# TODO:Update item to the server......
@@ -86,15 +89,15 @@ class CategoryResultView extends app.BaseView
 		# Create new edit view with the model
 		editView = new app.ProductCategoryEditView model:model
 		vel.replaceWith editView.render().el		# Update the same row with new edit view
-		vel.attr 'id', model.get('id')			# Also with id
+		vel.attr 'id', model.get('id')				# Also with id
 		
 		
 
 # ## Category Main View ------------------------------------------------------------------------------------------------
 class ProductCategoryView extends app.BaseView
 	initialize:->
-		@model.on 'search', @search, @
-		@model.on 'reset', @reset, @
+		@model.on 'search', @search, @				# When search model trigger 'searh we need to search and set the collection
+		@model.on 'reset', @reset, @				# WHen search model trihher reset collection will be emptied.
 		@searchView = new app.CategorySearchView model: @model
 		@resultView = new app.CategoryResultView collection: @collection
 		

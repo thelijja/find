@@ -13,7 +13,7 @@
 
     ProductCategories.prototype.model = app.ProductCategory;
 
-    ProductCategories.prototype.url = 'api/admin/categories/';
+    ProductCategories.prototype.url = 'api/admin/categories';
 
     return ProductCategories;
 

@@ -16,6 +16,8 @@ class CategorySearchView extends app.BaseView
 # ## Category Search Result View
 class CategoryResultView extends app.BaseView
 	el:'#result-area'
+	events:
+		'click #btn-add' : 'createCategory'
 	
 	initialize:->
 		@$el.empty();	# Clear this area if it is already occupied by different view
@@ -23,7 +25,11 @@ class CategoryResultView extends app.BaseView
 		@render()
 		
 	render:->
-	
+		
+	createCategory:->
+		cat = new app.ProductCategory id:'', code:'', name: ''
+		catEditView = new app.ProductCategoryEditView model:cat
+		@$('tbody').prepend catEditView.render().el	
 
 # ## Category Main View
 class ProductCategoryView extends app.BaseView
@@ -32,10 +38,18 @@ class ProductCategoryView extends app.BaseView
 		@resultView = new app.CategoryResultView @collection
 		
 	renader:->
-# # End Category Views		
 
+# ## CategoryItemEditView
+class ProductCategoryEditView extends app.BaseView
+	tagName: 'tr'
+	template: app.BaseView.getTemplate('#tpl-category-edit')
+	render:->
+		@renderDefault()
+		
+# # End Category Views		
 
 @app = window.app ? {}
 @app.ProductCategoryView = ProductCategoryView
 @app.CategorySearchView = CategorySearchView
 @app.CategoryResultView = CategoryResultView
+@app.ProductCategoryEditView = ProductCategoryEditView

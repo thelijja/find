@@ -51,6 +51,19 @@
       BaseView.__super__.constructor.apply(this, arguments);
     }
 
+    BaseView.getTemplate = function(selector) {
+      var tpl;
+      tpl = $(selector);
+      return _.template(tpl.html());
+    };
+
+    BaseView.prototype.renderDefault = function() {
+      this.$el.html(_.template(this.template({
+        m: this.model.toJSON()
+      })));
+      return this;
+    };
+
     return BaseView;
 
   })(Backbone.View);

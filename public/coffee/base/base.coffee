@@ -16,6 +16,13 @@ class BaseCollection extends Backbone.Collection
 		console.log(@stringify())	
 		
 class BaseView extends Backbone.View
+	@getTemplate:(selector)->
+		tpl = $(selector)
+		_.template(tpl.html())
+		
+	renderDefault:->
+		@$el.html(_.template @template m: @model.toJSON())
+		@
 
 class BaseRouter extends Backbone.Router
 		

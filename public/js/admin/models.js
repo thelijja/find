@@ -23,6 +23,11 @@
       ProductCategory.__super__.constructor.apply(this, arguments);
     }
 
+    ProductCategory.prototype["default"] = {
+      code: "",
+      name: ""
+    };
+
     return ProductCategory;
 
   })(app.BaseModel);

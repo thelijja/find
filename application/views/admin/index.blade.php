@@ -36,12 +36,21 @@
 		<table class="table table-bordered table-striped table-hover">
 			<thead>
 				<tr>
-					<th>#</th>
+					<th class="tc-tool">#</th>
 					<th>Code</th>
 					<th>Name</th>
+					<th class="tc-tool"><a id='btn-add' class="btn">+</a></th>
 				<tr>
 			<thead>
+			<tbody></tbody>
 		</table>
+	</script>
+	
+	<script type="text/template" id="tpl-category-edit">
+		<td class="tc-tool">#</td>
+		<td><input type="text" class="input-large" placeholder="Categody code"><%= m.code %></input></td>
+		<td><input type="text" class="input-large" placeholder="Categody name"><%= m.name %></input></td>
+		<td><button class="btn"></td>
 	</script>
 	<!-- End Templates
 @endsection

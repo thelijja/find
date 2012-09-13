@@ -1,5 +1,5 @@
 (function() {
-  var CategoryResultView, CategorySearchView, ProductCategoryView, _ref,
+  var CategoryResultView, CategorySearchView, ProductCategoryEditView, ProductCategoryView, _ref,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
@@ -35,6 +35,10 @@
 
     CategoryResultView.prototype.el = '#result-area';
 
+    CategoryResultView.prototype.events = {
+      'click #btn-add': 'createCategory'
+    };
+
     CategoryResultView.prototype.initialize = function() {
       this.$el.empty();
       this.$el.html($('#tpl-category-results').html());
@@ -42,6 +46,19 @@
     };
 
     CategoryResultView.prototype.render = function() {};
+
+    CategoryResultView.prototype.createCategory = function() {
+      var cat, catEditView;
+      cat = new app.ProductCategory({
+        id: '',
+        code: '',
+        name: ''
+      });
+      catEditView = new app.ProductCategoryEditView({
+        model: cat
+      });
+      return this.$('tbody').prepend(catEditView.render().el);
+    };
 
     return CategoryResultView;
 
@@ -66,6 +83,26 @@
 
   })(app.BaseView);
 
+  ProductCategoryEditView = (function(_super) {
+
+    __extends(ProductCategoryEditView, _super);
+
+    function ProductCategoryEditView() {
+      ProductCategoryEditView.__super__.constructor.apply(this, arguments);
+    }
+
+    ProductCategoryEditView.prototype.tagName = 'tr';
+
+    ProductCategoryEditView.prototype.template = app.BaseView.getTemplate('#tpl-category-edit');
+
+    ProductCategoryEditView.prototype.render = function() {
+      return this.renderDefault();
+    };
+
+    return ProductCategoryEditView;
+
+  })(app.BaseView);
+
   this.app = (_ref = window.app) != null ? _ref : {};
 
   this.app.ProductCategoryView = ProductCategoryView;
@@ -73,5 +110,7 @@
   this.app.CategorySearchView = CategorySearchView;
 
   this.app.CategoryResultView = CategoryResultView;
+
+  this.app.ProductCategoryEditView = ProductCategoryEditView;
 
 }).call(this);

@@ -23,6 +23,8 @@
       ProductCategory.__super__.constructor.apply(this, arguments);
     }
 
+    ProductCategory.prototype.url = '/api/admin/categories';
+
     ProductCategory.prototype["default"] = {
       code: "",
       name: ""

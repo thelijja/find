@@ -1,7 +1,7 @@
 # Views
 
 # # Begin Category Views
-# ## Category Search View
+# ## Category Search View ------------------------------------------------------------------------------------------------
 class CategorySearchView extends app.BaseView
 	el:'#search-area'
 	
@@ -13,7 +13,7 @@ class CategorySearchView extends app.BaseView
 	render:->
 	
 
-# ## Category Search Result View
+# ## Category Search Result View ------------------------------------------------------------------------------------------
 class CategoryResultView extends app.BaseView
 	el:'#result-area'
 	events:
@@ -27,7 +27,7 @@ class CategoryResultView extends app.BaseView
 	render:->
 		
 	createCategory:->
-		cat = new app.ProductCategory id:'', code:'', name: ''
+		cat = new app.ProductCategory code:'', name: ''
 		cat.on 'save', @itemSave, @			# We need to be motified when item is done and saved..
 		cat.on 'delete', @itemDelete, @
 		cat.on 'edit', @itemEdit, @
@@ -35,19 +35,33 @@ class CategoryResultView extends app.BaseView
 		@$('tbody').prepend catEditView.render().el
 		
 	itemSave:(view) ->
-		# Item is already saved
-		vel = view.$el							# Get the element for current view for this item
+		that = @
 		model = view.model						# Get the model who triggered the event
-		# Create new row view with model
-		rowView = new app.ProductCategoryRowView model:model
-		vel.replaceWith rowView.render().el		# Update the same row with new view
-		vel.attr 'id', model.get('id')			# Also with id
+		model.save null,
+			wait:true
+			success: (rmodel, response) ->								
+				# TODO:Save item in the sever.........
+				vel = view.$el							# Get the element for current view for this item		
+				# Create new row view with model
+				rowView = new app.ProductCategoryRowView model:model
+				vel.replaceWith rowView.render().el		# Update the same row with new view
+				vel.attr 'id', model.get('id')			# Also with id
+			error: (rmodel, errors) ->
+				that.showError('Error saving category item..') 
+
 		#view.remove()
 		
 	itemDelete:(view) ->
-		view.remove()
+		# Delete item from the server......
+		that = @
+		model = view.model
+		model.destroy
+			wait:true
+			success: -> view.remove()
+			error: (rmodel, errors) -> that.showError('Error in deleting item..');
 		
 	itemEdit:(view) ->
+		# TODO:Update item to the server......
 		vel = view.$el
 		model = view.model
 		# Create new edit view with the model
@@ -57,7 +71,7 @@ class CategoryResultView extends app.BaseView
 		
 		
 
-# ## Category Main View
+# ## Category Main View ------------------------------------------------------------------------------------------------
 class ProductCategoryView extends app.BaseView
 	initialize:->
 		@searchView = new app.CategorySearchView @model
@@ -65,7 +79,7 @@ class ProductCategoryView extends app.BaseView
 		
 	renader:->
 
-# ## CategoryItem edit view
+# ## CategoryItem edit view --------------------------------------------------------------------------------------------
 class ProductCategoryEditView extends app.BaseView
 	tagName: 'tr'
 	template: app.BaseView.getTemplate('#tpl-category-edit')
@@ -88,7 +102,8 @@ class ProductCategoryEditView extends app.BaseView
 		@model.set code:@$('.code-edit').val(), name:@$('.name-edit').val()				
 		@model.trigger 'delete', @
 		
-# ## Category Item row view
+		
+# ## Category Item row view ---------------------------------------------------------------------------------------------
 class ProductCategoryRowView extends app.BaseView
 	tagName: 'tr'
 	template: app.BaseView.getTemplate('#tpl-category-row')

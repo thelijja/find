@@ -9,12 +9,17 @@ class Api_Admin_Controller extends Base_Controller {
 	}
 	
 	public function post_category() {
-		$cat = Input::json();		
-		$cat->id = 1299;
-		Log::var_dump($cat);
+		$cat = Input::json();
+		
+		//TODO: Do some validation before saving...
+		$dbCat = new ProductCategory();
+		$dbCat->code = $cat->code;
+		$dbCat->name = $cat->name;
+		$dbCat->save();
+		
 		//$code = Request::foundation()->getContent();
-		Log::info('categories->post: ' . $cat->code);
-		return json_encode($cat);
+		Log::info('categories->post: ' . $dbCat->id);
+		return $dbCat->toJson();
 	}
 	
 	public function put_category() {
@@ -23,7 +28,10 @@ class Api_Admin_Controller extends Base_Controller {
 	}
 	
 	public function delete_category($id = -1) {
-		Log::info('categories->delete: ' . $id);
+		
+		$dbCat = ProductCategory::find($id);
+		$dbCat->delete();
+		
 	}	
 }
 

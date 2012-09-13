@@ -165,7 +165,7 @@ class Create_Schema {
 	private function createProductCategoryTable_0010() {
 
 		Schema::create('flk_product_category', function($t){
-			$t->integer('id')->unsigned()->primary('id');			
+			$t->increments('id')->unsigned();
 			$t->string('code', 50)->unique();
 			$t->string('name', 100)->nullable();
 			$t->text('description')->nullable();	

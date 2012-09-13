@@ -50,7 +50,6 @@
     CategoryResultView.prototype.createCategory = function() {
       var cat, catEditView;
       cat = new app.ProductCategory({
-        id: '',
         code: '',
         name: ''
       });
@@ -64,18 +63,39 @@
     };
 
     CategoryResultView.prototype.itemSave = function(view) {
-      var model, rowView, vel;
-      vel = view.$el;
+      var model, that;
+      that = this;
       model = view.model;
-      rowView = new app.ProductCategoryRowView({
-        model: model
+      return model.save(null, {
+        wait: true,
+        success: function(rmodel, response) {
+          var rowView, vel;
+          vel = view.$el;
+          rowView = new app.ProductCategoryRowView({
+            model: model
+          });
+          vel.replaceWith(rowView.render().el);
+          return vel.attr('id', model.get('id'));
+        },
+        error: function(rmodel, errors) {
+          return that.showError('Error saving category item..');
+        }
       });
-      vel.replaceWith(rowView.render().el);
-      return vel.attr('id', model.get('id'));
     };
 
     CategoryResultView.prototype.itemDelete = function(view) {
-      return view.remove();
+      var model, that;
+      that = this;
+      model = view.model;
+      return model.destroy({
+        wait: true,
+        success: function() {
+          return view.remove();
+        },
+        error: function(rmodel, errors) {
+          return that.showError('Error in deleting item..');
+        }
+      });
     };
 
     CategoryResultView.prototype.itemEdit = function(view) {

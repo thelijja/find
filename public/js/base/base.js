@@ -64,6 +64,10 @@
       return this;
     };
 
+    BaseView.prototype.showError = function(msg) {
+      return alert(msg);
+    };
+
     return BaseView;
 
   })(Backbone.View);

@@ -26,6 +26,9 @@ class BaseView extends Backbone.View
 		@$el.html(_.template @template m: @model.toJSON())		
 		@
 
+	showError: (msg)->
+		alert msg
+		
 # All routers should be derived from this base class
 class BaseRouter extends Backbone.Router
 		

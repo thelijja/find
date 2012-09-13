@@ -36,7 +36,7 @@
 		<table class="table table-bordered table-striped table-hover">
 			<thead>
 				<tr>
-					<th class="tc-tool">#</th>
+					<th class="id-col">#</th>
 					<th>Code</th>
 					<th>Name</th>
 					<th class="tc-tool"><a id='btn-add' class="btn">+</a></th>
@@ -47,10 +47,17 @@
 	</script>
 	
 	<script type="text/template" id="tpl-category-edit">
-		<td class="tc-tool">#</td>
-		<td><input type="text" class="input-large" placeholder="Categody code"><%= m.code %></input></td>
-		<td><input type="text" class="input-large" placeholder="Categody name"><%= m.name %></input></td>
-		<td><button class="btn"></td>
+		<td class="id-col">#</td>
+		<td><input type="text" class="input-large code-edit" placeholder="Categody code" value="<%= m.code %>"></td>
+		<td><input type="text" class="input-large name-edit" placeholder="Categody name" value="<%= m.name %>"></td>
+		<td><div class="row-fluid"><a class="btn btn-save">S</a><a class="btn btn-delete">D</a></div></td>		
+	</script>
+	
+	<script type="text/template" id="tpl-category-row">
+		<td class="id-col"><%= m.id %></td>
+		<td><%= m.code %></td>
+		<td><%= m.name %></td>
+		<td><div class="row-fluid"><a class="btn btn-edit">E</a><a class="btn btn-delete">D</a></div></td>				
 	</script>
 	<!-- End Templates
 @endsection

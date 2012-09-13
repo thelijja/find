@@ -1,29 +1,32 @@
 # Define base classes for models, collections, views etc..
 
+# All models should be derived from this base class
 class BaseModel extends Backbone.Model
-	stringify:->
+	stringify:->								# return json representation of this model as a string
 		JSON.stringify @
 		
-	log:->
+	log:->										# logs json representation to console
 		console.log(@stringify())
 		
-		
+# All colelctions should be derived from this base class		
 class BaseCollection extends Backbone.Collection
-	stringify:->
+	stringify:->								# return json representation of this model as a string
 		JSON.stringify @
 		
-	log:->
+	log:->										# logs json representation to console					
 		console.log(@stringify())	
-		
+
+# All views should be derived from this base class		
 class BaseView extends Backbone.View
-	@getTemplate:(selector)->
-		tpl = $(selector)
-		_.template(tpl.html())
+	@getTemplate:(selector)->					# static method to load the template body and create template
+		tpl = $(selector)						# could be add logic to handle error and emit blank <div> if needed
+		_.template(tpl.html())					# subview usage ->  template:app.BaseView.getTemplate('#tpl-id')
 		
-	renderDefault:->
-		@$el.html(_.template @template m: @model.toJSON())
+	renderDefault:->							# simple implementation of render using the template and model of its own
+		@$el.html(_.template @template m: @model.toJSON())		
 		@
 
+# All routers should be derived from this base class
 class BaseRouter extends Backbone.Router
 		
 # Available them in global scropt..		

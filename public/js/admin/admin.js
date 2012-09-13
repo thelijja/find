@@ -29,7 +29,7 @@
 
     return AdminRouter;
 
-  })(Backbone.Router);
+  })(app.BaseRouter);
 
   this.app.AdminRouter = AdminRouter;
 

@@ -1,6 +1,6 @@
 @app = window.app ? {}
 
-class AdminRouter extends Backbone.Router
+class AdminRouter extends app.BaseRouter
 	routes:
 		'categories' : 'showCategories'
 	

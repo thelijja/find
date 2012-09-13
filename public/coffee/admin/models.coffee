@@ -1,8 +1,8 @@
 #Admin Models
 
-class ProductCategorySearchModel extends Backbone.Model
+class ProductCategorySearchModel extends app.BaseModel
 
-class ProductCategory extends Backbone.Model
+class ProductCategory extends app.BaseModel
 
 
 @app = window.app ? {}

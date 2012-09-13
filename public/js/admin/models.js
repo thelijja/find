@@ -13,7 +13,7 @@
 
     return ProductCategorySearchModel;
 
-  })(Backbone.Model);
+  })(app.BaseModel);
 
   ProductCategory = (function(_super) {
 
@@ -25,7 +25,7 @@
 
     return ProductCategory;
 
-  })(Backbone.Model);
+  })(app.BaseModel);
 
   this.app = (_ref = window.app) != null ? _ref : {};
 

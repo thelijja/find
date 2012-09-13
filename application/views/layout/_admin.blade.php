@@ -32,6 +32,7 @@
 	{{ HTML::script('js/lib/underscore-min.js')}}
 	{{ HTML::script('js/lib/bootstrap.min.js')}}
 	{{ HTML::script('js/lib/backbone-min.js')}}
+	{{ HTML::script('js/base/base.js')}}
 	@yield_section
 	<!-- Javascript application -->	
 </body>

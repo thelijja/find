@@ -2,7 +2,7 @@
 
 # # Begin Category Views
 # ## Category Search View
-class CategorySearchView extends Backbone.View
+class CategorySearchView extends app.BaseView
 	el:'#search-area'
 	
 	initialize:->
@@ -14,7 +14,7 @@ class CategorySearchView extends Backbone.View
 	
 
 # ## Category Search Result View
-class CategoryResultView extends Backbone.View
+class CategoryResultView extends app.BaseView
 	el:'#result-area'
 	
 	initialize:->
@@ -26,7 +26,7 @@ class CategoryResultView extends Backbone.View
 	
 
 # ## Category Main View
-class ProductCategoryView extends Backbone.View
+class ProductCategoryView extends app.BaseView
 	initialize:->
 		@searchView = new app.CategorySearchView @model
 		@resultView = new app.CategoryResultView @collection

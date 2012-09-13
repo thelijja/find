@@ -17,7 +17,7 @@
 
     return ProductCategories;
 
-  })(Backbone.Collection);
+  })(app.BaseCollection);
 
   this.app = (_ref = window.app) != null ? _ref : {};
 

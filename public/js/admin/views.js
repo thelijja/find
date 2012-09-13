@@ -23,7 +23,7 @@
 
     return CategorySearchView;
 
-  })(Backbone.View);
+  })(app.BaseView);
 
   CategoryResultView = (function(_super) {
 
@@ -45,7 +45,7 @@
 
     return CategoryResultView;
 
-  })(Backbone.View);
+  })(app.BaseView);
 
   ProductCategoryView = (function(_super) {
 
@@ -64,7 +64,7 @@
 
     return ProductCategoryView;
 
-  })(Backbone.View);
+  })(app.BaseView);
 
   this.app = (_ref = window.app) != null ? _ref : {};
 

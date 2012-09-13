@@ -4,13 +4,22 @@
 # ## Category Search View ------------------------------------------------------------------------------------------------
 class CategorySearchView extends app.BaseView
 	el:'#search-area'
-	
-	initialize:->
+	events:
+		'click .btn-search': 'search'
+		'click .btn-clear': 'clear'
+		
+	initialize:->		
 		@$el.empty();	# Clear this area if it is already occupied by different view
 		@$el.html($('#tpl-category-search').html())		
 		@render()
 		
 	render:->
+		
+	search:->
+		@model.trigger 'search'
+	
+	clear:->
+		@model.trigger 'reset'
 	
 
 # ## Category Search Result View ------------------------------------------------------------------------------------------
@@ -20,11 +29,21 @@ class CategoryResultView extends app.BaseView
 		'click #btn-add' : 'createCategory'
 	
 	initialize:->
+		@collection.on 'reset', @render, @
 		@$el.empty();	# Clear this area if it is already occupied by different view
 		@$el.html($('#tpl-category-results').html())		
 		@render()
 		
 	render:->
+		that = @
+		$tbody = @$('tbody')
+		$tbody.empty()
+		@collection.each (item) ->
+			item.on 'save', that.itemSave, that			# We need to be motified when item is done and saved..
+			item.on 'delete', that.itemDelete, that
+			item.on 'edit', that.itemEdit, that
+			rowView = new app.ProductCategoryRowView model:item
+			$tbody.append rowView.render().el
 		
 	createCategory:->
 		cat = new app.ProductCategory code:'', name: ''
@@ -74,10 +93,20 @@ class CategoryResultView extends app.BaseView
 # ## Category Main View ------------------------------------------------------------------------------------------------
 class ProductCategoryView extends app.BaseView
 	initialize:->
-		@searchView = new app.CategorySearchView @model
-		@resultView = new app.CategoryResultView @collection
+		@model.on 'search', @search, @
+		@model.on 'reset', @reset, @
+		@searchView = new app.CategorySearchView model: @model
+		@resultView = new app.CategoryResultView collection: @collection
 		
 	renader:->
+	
+	search:->
+		# TODO: Write search logic...
+		@collection.fetch()
+		
+	reset:->
+		@collection.reset []
+		
 
 # ## CategoryItem edit view --------------------------------------------------------------------------------------------
 class ProductCategoryEditView extends app.BaseView

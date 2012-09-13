@@ -5,7 +5,10 @@ class Api_Admin_Controller extends Base_Controller {
 	public $restful = true;
 	
 	public function get_category($id = -1) {		
-		Log::info('categories->post:' . $id);
+		if ($id = -1) {			
+			$cats = ProductCategory::all();
+			return ProductCategory::allToJson($cats);
+		}				
 	}
 	
 	public function post_category() {
@@ -23,8 +26,17 @@ class Api_Admin_Controller extends Base_Controller {
 	}
 	
 	public function put_category() {
-		$code = Input::get('code');
-		Log::info('categories->put:' . $code);
+		$cat = Input::json();
+		//TODO: Do some validation before saving...
+		$dbCat = ProductCategory::find($cat->id);
+		if ($dbCat != null) {
+			$dbCat->code = $cat->code;
+			$dbCat->name = $cat->name;
+			$dbCat->save();
+			return $dbCat->toJson();
+		}
+		
+		return $this->post_category();
 	}
 	
 	public function delete_category($id = -1) {

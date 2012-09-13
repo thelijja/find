@@ -28,7 +28,8 @@
 		<form class="form-inline">
 			<input type="text" class="input-medium" placeholder="Category code">
 			<input type="text" class="input-medium" placeholder="Category name">
-			<button type="submit" class="btn">Search</button>	
+			<button type="submit" class="btn btn-search">Search</button>
+			<button type="cancel" class="btn btn-clear">Clear</button>
 		</form>
 	</script>
 	

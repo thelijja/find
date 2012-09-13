@@ -13,6 +13,11 @@
 
     CategorySearchView.prototype.el = '#search-area';
 
+    CategorySearchView.prototype.events = {
+      'click .btn-search': 'search',
+      'click .btn-clear': 'clear'
+    };
+
     CategorySearchView.prototype.initialize = function() {
       this.$el.empty();
       this.$el.html($('#tpl-category-search').html());
@@ -20,6 +25,14 @@
     };
 
     CategorySearchView.prototype.render = function() {};
+
+    CategorySearchView.prototype.search = function() {
+      return this.model.trigger('search');
+    };
+
+    CategorySearchView.prototype.clear = function() {
+      return this.model.trigger('reset');
+    };
 
     return CategorySearchView;
 
@@ -40,12 +53,28 @@
     };
 
     CategoryResultView.prototype.initialize = function() {
+      this.collection.on('reset', this.render, this);
       this.$el.empty();
       this.$el.html($('#tpl-category-results').html());
       return this.render();
     };
 
-    CategoryResultView.prototype.render = function() {};
+    CategoryResultView.prototype.render = function() {
+      var $tbody, that;
+      that = this;
+      $tbody = this.$('tbody');
+      $tbody.empty();
+      return this.collection.each(function(item) {
+        var rowView;
+        item.on('save', that.itemSave, that);
+        item.on('delete', that.itemDelete, that);
+        item.on('edit', that.itemEdit, that);
+        rowView = new app.ProductCategoryRowView({
+          model: item
+        });
+        return $tbody.append(rowView.render().el);
+      });
+    };
 
     CategoryResultView.prototype.createCategory = function() {
       var cat, catEditView;
@@ -122,11 +151,25 @@
     }
 
     ProductCategoryView.prototype.initialize = function() {
-      this.searchView = new app.CategorySearchView(this.model);
-      return this.resultView = new app.CategoryResultView(this.collection);
+      this.model.on('search', this.search, this);
+      this.model.on('reset', this.reset, this);
+      this.searchView = new app.CategorySearchView({
+        model: this.model
+      });
+      return this.resultView = new app.CategoryResultView({
+        collection: this.collection
+      });
     };
 
     ProductCategoryView.prototype.renader = function() {};
+
+    ProductCategoryView.prototype.search = function() {
+      return this.collection.fetch();
+    };
+
+    ProductCategoryView.prototype.reset = function() {
+      return this.collection.reset([]);
+    };
 
     return ProductCategoryView;
 

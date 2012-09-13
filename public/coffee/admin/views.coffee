@@ -75,11 +75,11 @@ class CategoryResultView extends app.BaseView
 		that = @
 		model = view.model
 		if not model.id
-			view.remove()							# Just remove the view no need to send server call
+			view.removeWithFade()					# Just remove the view no need to send server call
 		else
 			model.destroy
 				wait:true
-				success: -> view.remove()
+				success: -> view.removeWithFade()
 				error: (rmodel, errors) -> that.showError('Error in deleting item..');
 		
 	itemEdit:(view) ->

@@ -117,12 +117,12 @@
       that = this;
       model = view.model;
       if (!model.id) {
-        return view.remove();
+        return view.removeWithFade();
       } else {
         return model.destroy({
           wait: true,
           success: function() {
-            return view.remove();
+            return view.removeWithFade();
           },
           error: function(rmodel, errors) {
             return that.showError('Error in deleting item..');

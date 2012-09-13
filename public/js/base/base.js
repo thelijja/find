@@ -68,6 +68,12 @@
       return alert(msg);
     };
 
+    BaseView.prototype.removeWithFade = function() {
+      return this.$el.fadeOut('fast', function() {
+        return this.remove();
+      });
+    };
+
     return BaseView;
 
   })(Backbone.View);

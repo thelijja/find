@@ -29,6 +29,9 @@ class BaseView extends Backbone.View
 	showError: (msg)->
 		alert msg
 		
+	removeWithFade: ->
+		@$el.fadeOut 'fast', -> @remove()
+		
 # All routers should be derived from this base class
 class BaseRouter extends Backbone.Router
 		

@@ -11,32 +11,9 @@
       CategorySearchView.__super__.constructor.apply(this, arguments);
     }
 
-    CategorySearchView.prototype.el = '#search-area';
-
-    CategorySearchView.prototype.events = {
-      'click .btn-search': 'search',
-      'click .btn-clear': 'clear'
-    };
-
-    CategorySearchView.prototype.initialize = function() {
-      this.$el.empty();
-      this.$el.html($('#tpl-category-search').html());
-      return this.render();
-    };
-
-    CategorySearchView.prototype.render = function() {};
-
-    CategorySearchView.prototype.search = function() {
-      return this.model.trigger('search');
-    };
-
-    CategorySearchView.prototype.clear = function() {
-      return this.model.trigger('reset');
-    };
-
     return CategorySearchView;
 
-  })(app.BaseView);
+  })(app.SearchCriteriaView);
 
   CategoryResultView = (function(_super) {
 
@@ -46,105 +23,28 @@
       CategoryResultView.__super__.constructor.apply(this, arguments);
     }
 
-    CategoryResultView.prototype.el = '#result-area';
-
-    CategoryResultView.prototype.events = {
-      'click #btn-add': 'createCategory'
-    };
-
-    CategoryResultView.prototype.initialize = function() {
-      this.collection.on('reset', this.render, this);
-      this.$el.empty();
-      this.$el.html($('#tpl-category-results').html());
-      return this.render();
-    };
-
-    CategoryResultView.prototype.render = function() {
-      var $tbody, that;
-      that = this;
-      $tbody = this.$('tbody');
-      $tbody.empty();
-      return this.collection.each(function(item) {
-        var rowView;
-        item.on('save', that.itemSave, that);
-        item.on('delete', that.itemDelete, that);
-        item.on('edit', that.itemEdit, that);
-        rowView = new app.ProductCategoryRowView({
-          model: item
-        });
-        return $tbody.append(rowView.render().el);
+    CategoryResultView.prototype.createItemDisplayView = function(model) {
+      return new ProductCategoryRowView({
+        model: model
       });
     };
 
-    CategoryResultView.prototype.createCategory = function() {
-      var cat, catEditView;
-      cat = new app.ProductCategory({
+    CategoryResultView.prototype.createItemEditView = function(model) {
+      return new ProductCategoryEditView({
+        model: model
+      });
+    };
+
+    CategoryResultView.prototype.createEmptyModel = function() {
+      return new app.ProductCategory({
         code: '',
         name: ''
       });
-      cat.on('save', this.itemSave, this);
-      cat.on('delete', this.itemDelete, this);
-      cat.on('edit', this.itemEdit, this);
-      catEditView = new app.ProductCategoryEditView({
-        model: cat
-      });
-      return this.$('tbody').prepend(catEditView.render().el);
-    };
-
-    CategoryResultView.prototype.itemSave = function(view) {
-      var model, that;
-      that = this;
-      model = view.model;
-      return model.save(null, {
-        wait: true,
-        success: function(rmodel, response) {
-          var rowView, vel;
-          vel = view.$el;
-          rowView = new app.ProductCategoryRowView({
-            model: model
-          });
-          vel.replaceWith(rowView.render().el);
-          return vel.attr('id', model.get('id'));
-        },
-        error: function(rmodel, errors) {
-          return that.showError('Error saving category item..');
-        }
-      });
-    };
-
-    CategoryResultView.prototype.itemDelete = function(view) {
-      var model, that;
-      that = this;
-      model = view.model;
-      if (!model.id) {
-        return view.removeWithFade();
-      } else {
-        return model.destroy({
-          wait: true,
-          success: function() {
-            return view.removeWithFade();
-          },
-          error: function(rmodel, errors) {
-            return that.showError('Error in deleting item..');
-          }
-        });
-      }
-    };
-
-    CategoryResultView.prototype.itemEdit = function(view) {
-      var editView, model, vel;
-      vel = view.$el;
-      model = view.model;
-      editView = new app.ProductCategoryEditView({
-        model: model
-      });
-      vel.replaceWith(editView.render().el);
-      return vel.attr('id', model.get('id'));
     };
 
     return CategoryResultView;
 
-  })(app.BaseView);
+  })(app.SearchResultTableView);
 
   ProductCategoryView = (function(_super) {
 
@@ -158,10 +58,12 @@
       this.model.on('search', this.search, this);
       this.model.on('reset', this.reset, this);
       this.searchView = new app.CategorySearchView({
-        model: this.model
+        model: this.model,
+        template: '#tpl-category-search'
       });
       return this.resultView = new app.CategoryResultView({
-        collection: this.collection
+        collection: this.collection,
+        template: '#tpl-category-results'
       });
     };
 
@@ -187,40 +89,18 @@
       ProductCategoryEditView.__super__.constructor.apply(this, arguments);
     }
 
-    ProductCategoryEditView.prototype.tagName = 'tr';
-
     ProductCategoryEditView.prototype.template = app.BaseView.getTemplate('#tpl-category-edit');
 
-    ProductCategoryEditView.prototype.events = {
-      'click .btn-save': 'save',
-      'click .btn-delete': 'delete'
-    };
-
-    ProductCategoryEditView.prototype.render = function() {
-      this.renderDefault();
-      this.$el.attr('id', this.model.cid);
-      return this;
-    };
-
-    ProductCategoryEditView.prototype.save = function() {
-      this.model.set({
+    ProductCategoryEditView.prototype.readInputs = function() {
+      return this.model.set({
         code: this.$('.code-edit').val(),
         name: this.$('.name-edit').val()
       });
-      return this.model.trigger('save', this);
-    };
-
-    ProductCategoryEditView.prototype["delete"] = function() {
-      this.model.set({
-        code: this.$('.code-edit').val(),
-        name: this.$('.name-edit').val()
-      });
-      return this.model.trigger('delete', this);
     };
 
     return ProductCategoryEditView;
 
-  })(app.BaseView);
+  })(app.TableItemEditView);
 
   ProductCategoryRowView = (function(_super) {
 
@@ -230,32 +110,11 @@
       ProductCategoryRowView.__super__.constructor.apply(this, arguments);
     }
 
-    ProductCategoryRowView.prototype.tagName = 'tr';
-
     ProductCategoryRowView.prototype.template = app.BaseView.getTemplate('#tpl-category-row');
-
-    ProductCategoryRowView.prototype.events = {
-      'click .btn-edit': 'edit',
-      'click .btn-delete': 'delete'
-    };
-
-    ProductCategoryRowView.prototype.render = function() {
-      this.renderDefault();
-      this.$el.attr('id', this.model.id);
-      return this;
-    };
-
-    ProductCategoryRowView.prototype.edit = function() {
-      return this.model.trigger('edit', this);
-    };
-
-    ProductCategoryRowView.prototype["delete"] = function() {
-      return this.model.trigger('delete', this);
-    };
 
     return ProductCategoryRowView;
 
-  })(app.BaseView);
+  })(app.TableItemDisplayView);
 
   this.app = (_ref = window.app) != null ? _ref : {};
 

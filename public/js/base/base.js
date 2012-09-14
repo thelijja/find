@@ -1,5 +1,5 @@
 (function() {
-  var BaseCollection, BaseModel, BaseRouter, BaseView, _ref,
+  var BaseCollection, BaseModel, BaseRouter, BaseView, SearchCriteriaView, SearchResultTableView, TableItemDisplayView, TableItemEditView, _ref,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
@@ -78,6 +78,224 @@
 
   })(Backbone.View);
 
+  SearchCriteriaView = (function(_super) {
+
+    __extends(SearchCriteriaView, _super);
+
+    function SearchCriteriaView() {
+      SearchCriteriaView.__super__.constructor.apply(this, arguments);
+    }
+
+    SearchCriteriaView.prototype.el = '#search-area';
+
+    SearchCriteriaView.prototype.events = {
+      'click .btn-search': 'search',
+      'click .btn-clear': 'clear'
+    };
+
+    SearchCriteriaView.prototype.initialize = function() {
+      this.$el.empty();
+      this.$el.html($(this.options.template).html());
+      return this.render();
+    };
+
+    SearchCriteriaView.prototype.render = function() {};
+
+    SearchCriteriaView.prototype.search = function() {
+      return this.model.trigger('search');
+    };
+
+    SearchCriteriaView.prototype.clear = function() {
+      return this.model.trigger('reset');
+    };
+
+    return SearchCriteriaView;
+
+  })(BaseView);
+
+  SearchResultTableView = (function(_super) {
+
+    __extends(SearchResultTableView, _super);
+
+    function SearchResultTableView() {
+      SearchResultTableView.__super__.constructor.apply(this, arguments);
+    }
+
+    SearchResultTableView.prototype.el = '#result-area';
+
+    SearchResultTableView.prototype.events = {
+      'click #btn-add': 'create'
+    };
+
+    SearchResultTableView.prototype.initialize = function() {
+      this.collection.on('reset', this.render, this);
+      this.$el.empty();
+      this.$el.html($(this.options.template).html());
+      return this.render();
+    };
+
+    SearchResultTableView.prototype.render = function() {
+      var $tbody, that;
+      that = this;
+      $tbody = this.$('tbody');
+      $tbody.empty();
+      return this.collection.each(function(item) {
+        var displayView;
+        item.on('save', that.itemSave, that);
+        item.on('delete', that.itemDelete, that);
+        item.on('edit', that.itemEdit, that);
+        displayView = that.createItemDisplayView(item);
+        return $tbody.append(displayView.render().el);
+      });
+    };
+
+    SearchResultTableView.prototype.create = function() {
+      var editView, item;
+      item = this.createEmptyModel();
+      item.on('save', this.itemSave, this);
+      item.on('delete', this.itemDelete, this);
+      item.on('edit', this.itemEdit, this);
+      editView = this.createItemEditView(item);
+      return this.$('tbody').prepend(editView.render().el);
+    };
+
+    SearchResultTableView.prototype.itemSave = function(view) {
+      var model, that;
+      that = this;
+      model = view.model;
+      return model.save(null, {
+        wait: true,
+        success: function(rmodel, response) {
+          var rowView, vel;
+          vel = view.$el;
+          rowView = that.createItemDisplayView(model);
+          vel.replaceWith(rowView.render().el);
+          return vel.attr('id', model.get('id'));
+        },
+        error: function(rmodel, errors) {
+          return that.showError('Error saving category item..');
+        }
+      });
+    };
+
+    SearchResultTableView.prototype.itemDelete = function(view) {
+      var model, that;
+      that = this;
+      model = view.model;
+      if (!model.id) {
+        return view.removeWithFade();
+      } else {
+        return model.destroy({
+          wait: true,
+          success: function() {
+            return view.removeWithFade();
+          },
+          error: function(rmodel, errors) {
+            return that.showError('Error in deleting item..');
+          }
+        });
+      }
+    };
+
+    SearchResultTableView.prototype.itemEdit = function(view) {
+      var editView, model, vel;
+      vel = view.$el;
+      model = view.model;
+      editView = this.createItemEditView(model);
+      vel.replaceWith(editView.render().el);
+      return vel.attr('id', model.get('id'));
+    };
+
+    SearchResultTableView.prototype.createItemDisplayView = function(model) {
+      return new BaseView({
+        model: model
+      });
+    };
+
+    SearchResultTableView.prototype.createItemEditView = function(model) {
+      return new BaseView({
+        model: model
+      });
+    };
+
+    SearchResultTableView.prototype.createEmptyModel = function() {
+      return new BaseModel;
+    };
+
+    return SearchResultTableView;
+
+  })(BaseView);
+
+  TableItemDisplayView = (function(_super) {
+
+    __extends(TableItemDisplayView, _super);
+
+    function TableItemDisplayView() {
+      TableItemDisplayView.__super__.constructor.apply(this, arguments);
+    }
+
+    TableItemDisplayView.prototype.tagName = 'tr';
+
+    TableItemDisplayView.prototype.events = {
+      'click .btn-edit': 'edit',
+      'click .btn-delete': 'delete'
+    };
+
+    TableItemDisplayView.prototype.render = function() {
+      this.renderDefault();
+      this.$el.attr('id', this.model.id);
+      return this;
+    };
+
+    TableItemDisplayView.prototype.edit = function() {
+      return this.model.trigger('edit', this);
+    };
+
+    TableItemDisplayView.prototype["delete"] = function() {
+      return this.model.trigger('delete', this);
+    };
+
+    return TableItemDisplayView;
+
+  })(BaseView);
+
+  TableItemEditView = (function(_super) {
+
+    __extends(TableItemEditView, _super);
+
+    function TableItemEditView() {
+      TableItemEditView.__super__.constructor.apply(this, arguments);
+    }
+
+    TableItemEditView.prototype.tagName = 'tr';
+
+    TableItemEditView.prototype.events = {
+      'click .btn-save': 'save',
+      'click .btn-delete': 'delete'
+    };
+
+    TableItemEditView.prototype.render = function() {
+      this.renderDefault();
+      this.$el.attr('id', this.model.cid);
+      return this;
+    };
+
+    TableItemEditView.prototype.save = function() {
+      this.readInputs();
+      return this.model.trigger('save', this);
+    };
+
+    TableItemEditView.prototype["delete"] = function() {
+      this.readInputs();
+      return this.model.trigger('delete', this);
+    };
+
+    TableItemEditView.prototype.readInputs = function() {};
+
+    return TableItemEditView;
+
+  })(BaseView);
+
   BaseRouter = (function(_super) {
 
     __extends(BaseRouter, _super);
@@ -97,6 +315,14 @@
   this.app.BaseCollection = BaseCollection;
 
   this.app.BaseView = BaseView;
+
+  this.app.SearchCriteriaView = SearchCriteriaView;
+
+  this.app.SearchResultTableView = SearchResultTableView;
+
+  this.app.TableItemDisplayView = TableItemDisplayView;
+
+  this.app.TableItemEditView = TableItemEditView;
 
   this.app.BaseRouter = BaseRouter;
 

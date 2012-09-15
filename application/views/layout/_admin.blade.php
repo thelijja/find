@@ -6,8 +6,8 @@
 	<title>Admin</title>
 	<meta name="viewport" content="width=device-width">
 	@section('css')	
-	{{ HTML::style('css/lib/bootstrap.min.css') }}
-	{{ HTML::style('css/lib/bootstrap-responsive.min.css') }}
+	{{ HTML::style('css/bootstrap.min.css') }}
+	{{ HTML::style('css/bootstrap-responsive.min.css') }}
 	<!-- application styles -->
 	{{ HTML::style('css/base/style.css') }}
 	{{ HTML::style('css/admin/admin.css') }}

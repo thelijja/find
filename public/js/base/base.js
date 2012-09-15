@@ -69,8 +69,10 @@
     };
 
     BaseView.prototype.removeWithFade = function() {
+      var that;
+      that = this;
       return this.$el.fadeOut('fast', function() {
-        return this.remove();
+        return that.remove();
       });
     };
 
@@ -144,6 +146,7 @@
         item.on('save', that.itemSave, that);
         item.on('delete', that.itemDelete, that);
         item.on('edit', that.itemEdit, that);
+        item.on('cancel', that.cancelEdit, that);
         displayView = that.createItemDisplayView(item);
         return $tbody.append(displayView.render().el);
       });
@@ -155,6 +158,7 @@
       item.on('save', this.itemSave, this);
       item.on('delete', this.itemDelete, this);
       item.on('edit', this.itemEdit, this);
+      item.on('cancel', this.cancelEdit, this);
       editView = this.createItemEditView(item);
       return this.$('tbody').prepend(editView.render().el);
     };
@@ -182,8 +186,8 @@
       var model, that;
       that = this;
       model = view.model;
-      if (!model.id) {
-        return view.removeWithFade();
+      if (model.isNew()) {
+        return view.remove();
       } else {
         return model.destroy({
           wait: true,
@@ -204,6 +208,19 @@
       editView = this.createItemEditView(model);
       vel.replaceWith(editView.render().el);
       return vel.attr('id', model.get('id'));
+    };
+
+    SearchResultTableView.prototype.cancelEdit = function(view) {
+      var model, rowView, that, vel;
+      that = this;
+      vel = view.$el;
+      model = view.model;
+      if (model.isNew()) {
+        return view.remove();
+      } else {
+        rowView = that.createItemDisplayView(model);
+        return vel.replaceWith(rowView.render().el);
+      }
     };
 
     SearchResultTableView.prototype.createItemDisplayView = function(model) {
@@ -271,7 +288,7 @@
 
     TableItemEditView.prototype.events = {
       'click .btn-save': 'save',
-      'click .btn-delete': 'delete'
+      'click .btn-cancel': 'cancel'
     };
 
     TableItemEditView.prototype.render = function() {
@@ -285,9 +302,8 @@
       return this.model.trigger('save', this);
     };
 
-    TableItemEditView.prototype["delete"] = function() {
-      this.readInputs();
-      return this.model.trigger('delete', this);
+    TableItemEditView.prototype.cancel = function() {
+      return this.model.trigger('cancel', this);
     };
 
     TableItemEditView.prototype.readInputs = function() {};

@@ -21,8 +21,8 @@ class CategoryResultView extends app.SearchResultTableView
 # ## Category Main View ------------------------------------------------------------------------------------------------
 class ProductCategoryView extends app.BaseView
 	initialize:->
-		@model.on 'search', @search, @				# When search model trigger 'searh we need to search and set the collection
-		@model.on 'reset', @reset, @				# WHen search model trihher reset collection will be emptied.
+		@model.on 'search', @search, @				# When search model trigger 'searh' we need to search and set the collection
+		@model.on 'reset', @reset, @				# WHen search model trigger 'reset', collection will be emptied.
 		@searchView = new app.CategorySearchView model: @model, template:'#tpl-category-search'
 		@resultView = new app.CategoryResultView collection: @collection, template:'#tpl-category-results'
 		

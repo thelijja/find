@@ -30,7 +30,8 @@ class BaseView extends Backbone.View
 		alert msg
 		
 	removeWithFade: ->
-		@$el.fadeOut 'fast', -> @remove()
+		that = @
+		@$el.fadeOut 'fast', -> that.remove()
 		
 		
 # Basic search criteria view
@@ -93,6 +94,7 @@ class SearchResultTableView extends BaseView
 			item.on 'save', that.itemSave, that			# We need to be motified when item is done and saved..
 			item.on 'delete', that.itemDelete, that
 			item.on 'edit', that.itemEdit, that
+			item.on 'cancel', that.cancelEdit, that
 			displayView = that.createItemDisplayView(item) 
 			$tbody.append displayView.render().el
 		
@@ -101,6 +103,7 @@ class SearchResultTableView extends BaseView
 		item.on 'save', @itemSave, @						# We need to be motified when item is done and saved..
 		item.on 'delete', @itemDelete, @
 		item.on 'edit', @itemEdit, @
+		item.on 'cancel', @cancelEdit, @
 		editView = @createItemEditView(item)
 		@$('tbody').prepend editView.render().el
 		
@@ -121,22 +124,32 @@ class SearchResultTableView extends BaseView
 	itemDelete:(view) ->
 		that = @
 		model = view.model
-		if not model.id
-			view.removeWithFade()					# Just remove the view no need to send server call
+		if model.isNew()								# Just remove the view no need to send server call
+			view.remove()								# So don't do fade out animation, make it quick
 		else
 			model.destroy
 				wait:true
 				success: -> view.removeWithFade()
 				error: (rmodel, errors) -> that.showError('Error in deleting item..');
 		
-	itemEdit:(view) ->
-		# TODO:Update item to the server......
+	itemEdit:(view) ->		
 		vel = view.$el
 		model = view.model
 		# Create new edit view with the model
 		editView = @createItemEditView(model)
 		vel.replaceWith editView.render().el		# Update the same row with new edit view
 		vel.attr 'id', model.get('id')				# Also with id
+		
+	cancelEdit:(view) ->
+		that = @
+		vel = view.$el
+		model = view.model							# Get the model who triggered the event
+		if model.isNew()							# If user create new row and cancel just remove the view
+			view.remove()							# So don't do fade out animation, make it quick
+		else				
+			rowView = that.createItemDisplayView(model)
+			vel.replaceWith rowView.render().el		# Update the same row with new view			
+		
 
 	createItemDisplayView: (model)->				# This should be overriden by derived view to return correct item display view
 		new BaseView model:model
@@ -176,7 +189,7 @@ class TableItemEditView extends BaseView
 	tagName: 'tr'
 	events:
 		'click .btn-save':'save'
-		'click .btn-delete':'delete'
+		'click .btn-cancel':'cancel'
 		
 	render:->
 		@renderDefault()
@@ -188,10 +201,8 @@ class TableItemEditView extends BaseView
 		@readInputs()		
 		@model.trigger 'save', @				# we'll trigger it is done with the view
 	
-	delete:->
-		# Update the model with values
-		@readInputs()
-		@model.trigger 'delete', @		
+	cancel:->
+		@model.trigger 'cancel', @	
 		
 	readInputs:->
 		

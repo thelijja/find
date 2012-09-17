@@ -182,6 +182,7 @@ class TableItemDisplayView extends BaseView
 	delete:->
 		@model.trigger 'delete', @
 		
+	renderChild: ->	
 		
 # Item Edit view for table based search result view.
 # Usage

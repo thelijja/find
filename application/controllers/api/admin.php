@@ -18,6 +18,9 @@ class Api_Admin_Controller extends Base_Controller {
 		$dbCat = new ProductCategory();
 		$dbCat->code = $cat->code;
 		$dbCat->name = $cat->name;
+		if (!is_null($cat->parent_id) && $cat->parent_id > -1 ) {			
+			$dbCat->parent_id = $cat->parent_id;
+		}
 		$dbCat->save();
 		
 		//$code = Request::foundation()->getContent();
@@ -32,6 +35,12 @@ class Api_Admin_Controller extends Base_Controller {
 		if ($dbCat != null) {
 			$dbCat->code = $cat->code;
 			$dbCat->name = $cat->name;
+			if (!is_null($cat->parent_id) && $cat->parent_id > -1 ) {			
+				$dbCat->parent_id = $cat->parent_id;
+			}
+			else {
+				$dbCat->parent_id = null;
+			}
 			$dbCat->save();
 			return $dbCat->toJson();
 		}

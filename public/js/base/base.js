@@ -274,6 +274,8 @@
       return this.model.trigger('delete', this);
     };
 
+    TableItemDisplayView.prototype.renderChild = function() {};
+
     return TableItemDisplayView;
 
   })(BaseView);

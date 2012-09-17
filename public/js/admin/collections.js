@@ -15,6 +15,12 @@
 
     ProductCategories.prototype.url = 'api/admin/categories';
 
+    ProductCategories.prototype.getAllExcept = function(id) {
+      return _.reject(this.models, function(model) {
+        return model.id === id;
+      });
+    };
+
     return ProductCategories;
 
   })(app.BaseCollection);

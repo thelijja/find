@@ -24,14 +24,20 @@
     }
 
     CategoryResultView.prototype.createItemDisplayView = function(model) {
+      model.set('parentCode', '');
+      if (!_.isUndefined(model.get('parent_id')) && model.get('parent_id') > 0) {
+        model.set('parentCode', this.collection.get(model.get('parent_id')).get('code'));
+      }
       return new ProductCategoryRowView({
-        model: model
+        model: model,
+        categories: this.collection
       });
     };
 
     CategoryResultView.prototype.createItemEditView = function(model) {
       return new ProductCategoryEditView({
-        model: model
+        model: model,
+        categories: this.collection
       });
     };
 
@@ -94,8 +100,23 @@
     ProductCategoryEditView.prototype.readInputs = function() {
       return this.model.set({
         code: this.$('.code-edit').val(),
-        name: this.$('.name-edit').val()
+        name: this.$('.name-edit').val(),
+        parent_id: this.$('#parentId').val()
       });
+    };
+
+    ProductCategoryEditView.prototype.render = function() {
+      var cat, otherCats, _i, _len;
+      ProductCategoryEditView.__super__.render.apply(this, arguments);
+      otherCats = this.options.categories.getAllExcept(this.model.id);
+      for (_i = 0, _len = otherCats.length; _i < _len; _i++) {
+        cat = otherCats[_i];
+        this.$('#parentId').append('<option value="' + cat.id + '">' + cat.get('code') + '</option>');
+      }
+      if (this.model.has('parent_id')) {
+        this.$("#parentId option[value='" + this.model.get('parent_id') + "']").attr('selected', "selected");
+      }
+      return this;
     };
 
     return ProductCategoryEditView;

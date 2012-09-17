@@ -103,11 +103,13 @@
 
     SearchCriteriaView.prototype.render = function() {};
 
-    SearchCriteriaView.prototype.search = function() {
+    SearchCriteriaView.prototype.search = function(e) {
+      e.preventDefault();
       return this.model.trigger('search');
     };
 
-    SearchCriteriaView.prototype.clear = function() {
+    SearchCriteriaView.prototype.clear = function(e) {
+      e.preventDefault();
       return this.model.trigger('reset');
     };
 

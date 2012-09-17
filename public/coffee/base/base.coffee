@@ -58,10 +58,12 @@ class SearchCriteriaView extends BaseView
 		
 	render:->
 		
-	search:->
+	search: (e)->
+		e.preventDefault()								# To avoid normal post caused by link click
 		@model.trigger 'search'
 	
-	clear:->
+	clear: (e)->
+		e.preventDefault()
 		@model.trigger 'reset'
 		
 		

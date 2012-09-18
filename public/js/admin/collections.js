@@ -1,5 +1,5 @@
 (function() {
-  var ProductCategories, _ref,
+  var FeatureCategories, ProductCategories, _ref,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
@@ -25,8 +25,26 @@
 
   })(app.BaseCollection);
 
+  FeatureCategories = (function(_super) {
+
+    __extends(FeatureCategories, _super);
+
+    function FeatureCategories() {
+      FeatureCategories.__super__.constructor.apply(this, arguments);
+    }
+
+    FeatureCategories.prototype.model = app.FeatureCategory;
+
+    FeatureCategories.prototype.url = 'api/admin/featurecats';
+
+    return FeatureCategories;
+
+  })(app.BaseCollection);
+
   this.app = (_ref = window.app) != null ? _ref : {};
 
   this.app.ProductCategories = ProductCategories;
+
+  this.app.FeatureCategories = FeatureCategories;
 
 }).call(this);

@@ -37,7 +37,10 @@ class ProductCategoryView extends app.BaseView
 	reset:->
 		@collection.reset []
 		
-
+	close:->
+		@searchView.close() if @searchView?
+		@resultView.close() if @resultView?
+		
 # ## CategoryItem edit view --------------------------------------------------------------------------------------------
 class ProductCategoryEditView extends app.TableItemEditView
 	template: app.BaseView.getTemplate('#tpl-category-edit')
@@ -56,10 +59,60 @@ class ProductCategoryEditView extends app.TableItemEditView
 # ## Category Item row view ---------------------------------------------------------------------------------------------
 class ProductCategoryRowView extends app.TableItemDisplayView
 	template: app.BaseView.getTemplate('#tpl-category-row')
-
-	
 		
-# # End Category Views		
+# # End Category Views
+
+# ========================================================================================================================
+# # Begin Feature Category Views
+
+# ## Feature Category Search View ------------------------------------------------------------------------------------------------
+class FeatureCategorySearchView extends app.SearchCriteriaView
+
+# ## Feature Category Result View ------------------------------------------------------------------------------------------
+class FeatureCategoryResultView extends app.SearchResultTableView
+	createItemDisplayView: (model) ->
+		new FeatureCategoryRowView model:model
+	
+	createItemEditView: (model) ->
+		new FeatureCategoryEditView model:model
+		
+	createEmptyModel: ->
+		new app.FeatureCategory code:''
+		
+# ## Feature Category Main View ------------------------------------------------------------------------------------------------
+class FeatureCategoryView extends app.BaseView
+	initialize:->
+		@model.on 'search', @search, @				# When search model trigger 'searh' we need to search and set the collection
+		@model.on 'reset', @reset, @				# WHen search model trigger 'reset', collection will be emptied.
+		@searchView = new app.FeatureCategorySearchView model: @model, template:'#tpl-featurecat-search'
+		@resultView = new app.FeatureCategoryResultView collection: @collection, template:'#tpl-featurecat-results'
+		
+	renader:->
+	
+	search:->
+		# TODO: Write search logic...
+		@collection.fetch()
+		
+	reset:->
+		@collection.reset []		
+
+	close:->
+		@searchView.close() if @searchView?
+		@resultView.close() if @resultView?
+
+# ## Feature CategoryItem edit view --------------------------------------------------------------------------------------------
+class FeatureCategoryEditView extends app.TableItemEditView
+	template: app.BaseView.getTemplate('#tpl-featurecat-edit')
+		
+	readInputs:->
+		@model.set code:@$('.code-edit').val()
+	
+# ## Feature Category Item row view ---------------------------------------------------------------------------------------------
+class FeatureCategoryRowView extends app.TableItemDisplayView
+	template: app.BaseView.getTemplate('#tpl-featurecat-row')			
+
+
+# # End Feature Category Views
 
 @app = window.app ? {}
 @app.ProductCategoryView = ProductCategoryView
@@ -67,3 +120,9 @@ class ProductCategoryRowView extends app.TableItemDisplayView
 @app.CategoryResultView = CategoryResultView
 @app.ProductCategoryEditView = ProductCategoryEditView
 @app.ProductCategoryRowView = ProductCategoryRowView
+
+@app.FeatureCategoryView = FeatureCategoryView
+@app.FeatureCategorySearchView = FeatureCategorySearchView
+@app.FeatureCategoryResultView = FeatureCategoryResultView
+@app.FeatureCategoryEditView = FeatureCategoryEditView
+@app.FeatureCategoryRowView = FeatureCategoryRowView

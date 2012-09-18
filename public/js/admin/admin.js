@@ -14,14 +14,27 @@
     }
 
     AdminRouter.prototype.routes = {
-      'categories': 'showCategories'
+      'categories': 'showCategories',
+      'featurecats': 'showFeatureCats'
     };
 
     AdminRouter.prototype.showCategories = function() {
-      var catView, categories, searchModel;
+      var categories, searchModel;
+      if (this.currentView != null) this.currentView.close();
       searchModel = new app.ProductCategorySearchModel();
       categories = new app.ProductCategories();
-      return catView = new app.ProductCategoryView({
+      return this.currentView = new app.ProductCategoryView({
+        collection: categories,
+        model: searchModel
+      });
+    };
+
+    AdminRouter.prototype.showFeatureCats = function() {
+      var categories, searchModel;
+      if (this.currentView != null) this.currentView.close();
+      searchModel = new app.FeatureCategorySearchModel;
+      categories = new app.FeatureCategories;
+      return this.currentView = new app.FeatureCategoryView({
         collection: categories,
         model: searchModel
       });

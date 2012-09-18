@@ -1,5 +1,5 @@
 (function() {
-  var CategoryResultView, CategorySearchView, ProductCategoryEditView, ProductCategoryRowView, ProductCategoryView, _ref,
+  var CategoryResultView, CategorySearchView, FeatureCategoryEditView, FeatureCategoryResultView, FeatureCategoryRowView, FeatureCategorySearchView, FeatureCategoryView, ProductCategoryEditView, ProductCategoryRowView, ProductCategoryView, _ref,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
@@ -83,6 +83,11 @@
       return this.collection.reset([]);
     };
 
+    ProductCategoryView.prototype.close = function() {
+      if (this.searchView != null) this.searchView.close();
+      if (this.resultView != null) return this.resultView.close();
+    };
+
     return ProductCategoryView;
 
   })(app.BaseView);
@@ -137,6 +142,122 @@
 
   })(app.TableItemDisplayView);
 
+  FeatureCategorySearchView = (function(_super) {
+
+    __extends(FeatureCategorySearchView, _super);
+
+    function FeatureCategorySearchView() {
+      FeatureCategorySearchView.__super__.constructor.apply(this, arguments);
+    }
+
+    return FeatureCategorySearchView;
+
+  })(app.SearchCriteriaView);
+
+  FeatureCategoryResultView = (function(_super) {
+
+    __extends(FeatureCategoryResultView, _super);
+
+    function FeatureCategoryResultView() {
+      FeatureCategoryResultView.__super__.constructor.apply(this, arguments);
+    }
+
+    FeatureCategoryResultView.prototype.createItemDisplayView = function(model) {
+      return new FeatureCategoryRowView({
+        model: model
+      });
+    };
+
+    FeatureCategoryResultView.prototype.createItemEditView = function(model) {
+      return new FeatureCategoryEditView({
+        model: model
+      });
+    };
+
+    FeatureCategoryResultView.prototype.createEmptyModel = function() {
+      return new app.FeatureCategory({
+        code: ''
+      });
+    };
+
+    return FeatureCategoryResultView;
+
+  })(app.SearchResultTableView);
+
+  FeatureCategoryView = (function(_super) {
+
+    __extends(FeatureCategoryView, _super);
+
+    function FeatureCategoryView() {
+      FeatureCategoryView.__super__.constructor.apply(this, arguments);
+    }
+
+    FeatureCategoryView.prototype.initialize = function() {
+      this.model.on('search', this.search, this);
+      this.model.on('reset', this.reset, this);
+      this.searchView = new app.FeatureCategorySearchView({
+        model: this.model,
+        template: '#tpl-featurecat-search'
+      });
+      return this.resultView = new app.FeatureCategoryResultView({
+        collection: this.collection,
+        template: '#tpl-featurecat-results'
+      });
+    };
+
+    FeatureCategoryView.prototype.renader = function() {};
+
+    FeatureCategoryView.prototype.search = function() {
+      return this.collection.fetch();
+    };
+
+    FeatureCategoryView.prototype.reset = function() {
+      return this.collection.reset([]);
+    };
+
+    FeatureCategoryView.prototype.close = function() {
+      if (this.searchView != null) this.searchView.close();
+      if (this.resultView != null) return this.resultView.close();
+    };
+
+    return FeatureCategoryView;
+
+  })(app.BaseView);
+
+  FeatureCategoryEditView = (function(_super) {
+
+    __extends(FeatureCategoryEditView, _super);
+
+    function FeatureCategoryEditView() {
+      FeatureCategoryEditView.__super__.constructor.apply(this, arguments);
+    }
+
+    FeatureCategoryEditView.prototype.template = app.BaseView.getTemplate('#tpl-featurecat-edit');
+
+    FeatureCategoryEditView.prototype.readInputs = function() {
+      return this.model.set({
+        code: this.$('.code-edit').val()
+      });
+    };
+
+    return FeatureCategoryEditView;
+
+  })(app.TableItemEditView);
+
+  FeatureCategoryRowView = (function(_super) {
+
+    __extends(FeatureCategoryRowView, _super);
+
+    function FeatureCategoryRowView() {
+      FeatureCategoryRowView.__super__.constructor.apply(this, arguments);
+    }
+
+    FeatureCategoryRowView.prototype.template = app.BaseView.getTemplate('#tpl-featurecat-row');
+
+    return FeatureCategoryRowView;
+
+  })(app.TableItemDisplayView);
+
   this.app = (_ref = window.app) != null ? _ref : {};
 
   this.app.ProductCategoryView = ProductCategoryView;
@@ -148,5 +269,15 @@
   this.app.ProductCategoryEditView = ProductCategoryEditView;
 
   this.app.ProductCategoryRowView = ProductCategoryRowView;
+
+  this.app.FeatureCategoryView = FeatureCategoryView;
+
+  this.app.FeatureCategorySearchView = FeatureCategorySearchView;
+
+  this.app.FeatureCategoryResultView = FeatureCategoryResultView;
+
+  this.app.FeatureCategoryEditView = FeatureCategoryEditView;
+
+  this.app.FeatureCategoryRowView = FeatureCategoryRowView;
 
 }).call(this);

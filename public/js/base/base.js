@@ -76,6 +76,11 @@
       });
     };
 
+    BaseView.prototype.close = function() {
+      this.undelegateEvents();
+      return this.$el.empty();
+    };
+
     return BaseView;
 
   })(Backbone.View);

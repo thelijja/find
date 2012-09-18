@@ -6,6 +6,8 @@
 
 // Registering routes related to Product Categories
 Route::any('api/admin/categories/(:any?)', array('as'=> 'api.admin.categories', 'uses' => 'api.admin@category'));
+// Registering routes related to Feature Categories
+Route::any('api/admin/featurecats/(:any?)', array('as'=> 'api.admin.featurecats', 'uses' => 'api.admin@featurecategory'));
 
 
 /*

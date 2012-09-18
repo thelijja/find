@@ -3,12 +3,20 @@
 class AdminRouter extends app.BaseRouter
 	routes:
 		'categories' : 'showCategories'
+		'featurecats' : 'showFeatureCats'
 	
 	showCategories: ->
+		@currentView.close() if @currentView?
 		searchModel = new app.ProductCategorySearchModel()
 		categories = new app.ProductCategories()		
-		catView = new app.ProductCategoryView collection:categories, model:searchModel
+		@currentView = new app.ProductCategoryView collection:categories, model:searchModel
+		
 					
+	showFeatureCats: ->
+		@currentView.close() if @currentView?
+		searchModel = new app.FeatureCategorySearchModel
+		categories = new app.FeatureCategories
+		@currentView = new app.FeatureCategoryView collection:categories, model:searchModel
 
 @app.AdminRouter = AdminRouter
 

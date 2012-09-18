@@ -33,6 +33,9 @@ class BaseView extends Backbone.View
 		that = @
 		@$el.fadeOut 'fast', -> that.remove()
 		
+	close:->									# Close method is just to remove view contents and unbind events so that
+		@undelegateEvents()						# same dom element can be used to add new view of same type.
+		@$el.empty()
 		
 # Basic search criteria view
 # Usage:
@@ -65,7 +68,7 @@ class SearchCriteriaView extends BaseView
 	clear: (e)->
 		e.preventDefault()
 		@model.trigger 'reset'
-		
+			
 		
 # Basic search result view with add edit delete options and this assume table to show the results.
 # Usage:

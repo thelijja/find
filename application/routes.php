@@ -8,7 +8,8 @@
 Route::any('api/admin/categories/(:any?)', array('as'=> 'api.admin.categories', 'uses' => 'api.admin@category'));
 // Registering routes related to Feature Categories
 Route::any('api/admin/featurecats/(:any?)', array('as'=> 'api.admin.featurecats', 'uses' => 'api.admin@featurecategory'));
-
+// Registering routes related to Product Features
+Route::any('api/admin/features/(:any?)', array('as'=> 'api.admin.features', 'uses' => 'api.admin@feature'));
 
 /*
  * Admin page routes

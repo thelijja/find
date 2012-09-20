@@ -106,19 +106,45 @@ class Api_Admin_Controller extends Base_Controller {
 	 * Product Features REST API
 	 */
 	public function get_feature($id = -1) {
-		
+		if (is_null($id) || $id = -1) {
+			$feature = ProductFeature::all();
+			return ProductFeature::allToJson($feature);
+		}		
 	}
 	
 	public function post_feature() {
+		$feature = Input::json();
 		
+		//TODO: Do some validation here before saving..
+		$dbFeature = new ProductFeature();
+		$dbFeature->name = $feature->name;
+		$dbFeature->data_type = $feature->data_type;
+		$dbFeature->importance = $feature->importance;
+		$dbFeature->description = empty($feature->description) ? null: $feature->description;
+		$dbFeature->save();
+		return $dbFeature->toJson();		
 	}
 	
 	public function put_feature() {
+		$feature = Input::json();
 		
+		$dbFeature = ProductFeature::find($feature->id);
+		if (!is_null($dbFeature)) {
+			$dbFeature->name = $feature->name;
+			$dbFeature->data_type = $feature->data_type;
+			$dbFeature->importance = $feature->importance;
+			$dbFeature->description = empty($feature->description) ? null: $feature->description;
+			$dbFeature->save();
+			return $dbFeature->toJson();
+		}
+		else {
+			return $this->post_feature();
+		}		
 	}
 	
 	public function delete_feature($id) {
-		
+		$dbFeature = ProductFeature::find($id);
+		$dbFeature->delete();		
 	}
 }
 

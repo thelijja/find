@@ -16,7 +16,8 @@
     AdminRouter.prototype.routes = {
       '': 'showCategories',
       'categories': 'showCategories',
-      'featurecats': 'showFeatureCats'
+      'featurecats': 'showFeatureCats',
+      'features': 'showFeatures'
     };
 
     AdminRouter.prototype.showCategories = function() {
@@ -37,6 +38,17 @@
       categories = new app.FeatureCategories;
       return this.currentView = new app.FeatureCategoryView({
         collection: categories,
+        model: searchModel
+      });
+    };
+
+    AdminRouter.prototype.showFeatures = function() {
+      var features, searchModel;
+      if (this.currentView != null) this.currentView.close();
+      searchModel = new app.FeatureSearchModel;
+      features = new app.ProductFeatures;
+      return this.currentView = new app.ProductFeatureView({
+        collection: features,
         model: searchModel
       });
     };

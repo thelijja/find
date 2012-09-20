@@ -5,6 +5,7 @@ class AdminRouter extends app.BaseRouter
 		'':'showCategories'
 		'categories' : 'showCategories'
 		'featurecats' : 'showFeatureCats'
+		'features':'showFeatures'
 	
 	showCategories: ->
 		@currentView.close() if @currentView?
@@ -18,6 +19,12 @@ class AdminRouter extends app.BaseRouter
 		searchModel = new app.FeatureCategorySearchModel
 		categories = new app.FeatureCategories
 		@currentView = new app.FeatureCategoryView collection:categories, model:searchModel
+		
+	showFeatures:->
+		@currentView.close() if @currentView?
+		searchModel = new app.FeatureSearchModel
+		features = new app.ProductFeatures
+		@currentView = new app.ProductFeatureView collection:features, model:searchModel
 
 @app.AdminRouter = AdminRouter
 

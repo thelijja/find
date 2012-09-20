@@ -16,7 +16,7 @@
 <body>
 	<div class="container-fluid">
 		<div class="row-fluid admin-header" >
-			<h2>::Admin Portal</h2>
+			<h2>:: Admin Portal</h2>
 		</div>
 		<div class="row-fluid pull-right">
 			@section('nav')

@@ -110,21 +110,33 @@ class SearchResultTableView extends BaseView
 		item.on 'edit', @itemEdit, @
 		item.on 'cancel', @cancelEdit, @
 		editView = @createItemEditView(item)
-		@$('tbody').prepend editView.render().el
+		if editView.isModalEditView() 
+			editView.render()
+		else	
+			@$('tbody').prepend editView.render().el
 		
 	itemSave:(view) ->
 		that = @
 		model = view.model								# Get the model who triggered the event
+		newModel = model.isNew()
 		model.save null,
 			wait:true
-			success: (rmodel, response) ->								
-				vel = view.$el							# Get the element for current view for this item		
-				# Create new row view with model
+			success: (rmodel, response) ->
 				rowView = that.createItemDisplayView(model)
-				vel.replaceWith rowView.render().el		# Update the same row with new view
-				vel.attr 'id', model.get('id')			# Also with id
+				if view.isModalEditView()
+					if newModel
+						@$('tbody').prepend rowView.render().el						
+					else
+						@$('#'+model.id).replaceWith rowView.render().el
+					view.hideModal()	
+				else
+					vel = view.$el							# Get the element for current view for this item		
+					# Create new row view with model				
+					vel.replaceWith rowView.render().el		# Update the same row with new view
+					vel.attr 'id', model.get('id')			# Also with id
+				
 			error: (rmodel, errors) ->
-				that.showError('Error saving category item..') 
+				that.showError(errors) 
 		
 	itemDelete:(view) ->
 		that = @
@@ -142,8 +154,11 @@ class SearchResultTableView extends BaseView
 		model = view.model
 		# Create new edit view with the model
 		editView = @createItemEditView(model)
-		vel.replaceWith editView.render().el		# Update the same row with new edit view
-		vel.attr 'id', model.get('id')				# Also with id
+		if editView.isModalEditView()
+			editView.render()
+		else
+			vel.replaceWith editView.render().el		# Update the same row with new edit view
+			vel.attr 'id', model.get('id')				# Also with id
 		
 	cancelEdit:(view) ->
 		that = @
@@ -151,9 +166,10 @@ class SearchResultTableView extends BaseView
 		model = view.model							# Get the model who triggered the event
 		if model.isNew()							# If user create new row and cancel just remove the view
 			view.remove()							# So don't do fade out animation, make it quick
-		else				
-			rowView = that.createItemDisplayView(model)
-			vel.replaceWith rowView.render().el		# Update the same row with new view			
+		else
+			if not view.isModalEditView()
+				rowView = that.createItemDisplayView(model)
+				vel.replaceWith rowView.render().el		# Update the same row with new view			
 		
 
 	createItemDisplayView: (model)->				# This should be overriden by derived view to return correct item display view
@@ -211,6 +227,9 @@ class TableItemEditView extends BaseView
 		@model.trigger 'cancel', @	
 		
 	readInputs:->
+		
+	isModalEditView:->							# This is to determin whether place input form inside the table row or display
+		false									# model view to get user input.
 		
 		
 # All routers should be derived from this base class

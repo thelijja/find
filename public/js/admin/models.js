@@ -1,5 +1,5 @@
 (function() {
-  var FeatureCategory, FeatureCategorySearchModel, ProductCategory, ProductCategorySearchModel, _ref,
+  var FeatureCategory, FeatureCategorySearchModel, FeatureSearchModel, ProductCategory, ProductCategorySearchModel, ProductFeature, _ref,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
@@ -65,6 +65,32 @@
 
   })(app.BaseModel);
 
+  FeatureSearchModel = (function(_super) {
+
+    __extends(FeatureSearchModel, _super);
+
+    function FeatureSearchModel() {
+      FeatureSearchModel.__super__.constructor.apply(this, arguments);
+    }
+
+    return FeatureSearchModel;
+
+  })(app.BaseModel);
+
+  ProductFeature = (function(_super) {
+
+    __extends(ProductFeature, _super);
+
+    function ProductFeature() {
+      ProductFeature.__super__.constructor.apply(this, arguments);
+    }
+
+    ProductFeature.prototype.urlRoot = 'api/admin/features';
+
+    return ProductFeature;
+
+  })(app.BaseModel);
+
   this.app = (_ref = window.app) != null ? _ref : {};
 
   this.app.ProductCategory = ProductCategory;
@@ -74,5 +100,9 @@
   this.app.FeatureCategory = FeatureCategory;
 
   this.app.FeatureCategorySearchModel = FeatureCategorySearchModel;
+
+  this.app.FeatureSearchModel = FeatureSearchModel;
+
+  this.app.ProductFeature = ProductFeature;
 
 }).call(this);

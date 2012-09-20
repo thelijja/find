@@ -1,5 +1,5 @@
 (function() {
-  var CategoryResultView, CategorySearchView, FeatureCategoryEditView, FeatureCategoryResultView, FeatureCategoryRowView, FeatureCategorySearchView, FeatureCategoryView, ProductCategoryEditView, ProductCategoryRowView, ProductCategoryView, _ref,
+  var CategoryResultView, CategorySearchView, FeatureCategoryEditView, FeatureCategoryResultView, FeatureCategoryRowView, FeatureCategorySearchView, FeatureCategoryView, ProductCategoryEditView, ProductCategoryRowView, ProductCategoryView, ProductFeatureEditView, ProductFeatureResultView, ProductFeatureRowView, ProductFeatureSearchView, ProductFeatureView, _ref,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
@@ -260,6 +260,146 @@
 
   })(app.TableItemDisplayView);
 
+  ProductFeatureSearchView = (function(_super) {
+
+    __extends(ProductFeatureSearchView, _super);
+
+    function ProductFeatureSearchView() {
+      ProductFeatureSearchView.__super__.constructor.apply(this, arguments);
+    }
+
+    return ProductFeatureSearchView;
+
+  })(app.SearchCriteriaView);
+
+  ProductFeatureResultView = (function(_super) {
+
+    __extends(ProductFeatureResultView, _super);
+
+    function ProductFeatureResultView() {
+      ProductFeatureResultView.__super__.constructor.apply(this, arguments);
+    }
+
+    ProductFeatureResultView.prototype.createItemDisplayView = function(model) {
+      return new ProductFeatureRowView({
+        model: model
+      });
+    };
+
+    ProductFeatureResultView.prototype.createItemEditView = function(model) {
+      return new ProductFeatureEditView({
+        model: model
+      });
+    };
+
+    ProductFeatureResultView.prototype.createEmptyModel = function() {
+      return new app.ProductFeature({
+        name: '',
+        importance: 0
+      });
+    };
+
+    return ProductFeatureResultView;
+
+  })(app.SearchResultTableView);
+
+  ProductFeatureView = (function(_super) {
+
+    __extends(ProductFeatureView, _super);
+
+    function ProductFeatureView() {
+      ProductFeatureView.__super__.constructor.apply(this, arguments);
+    }
+
+    ProductFeatureView.prototype.initialize = function() {
+      this.model.on('search', this.search, this);
+      this.model.on('reset', this.reset, this);
+      this.searchView = new app.ProductFeatureSearchView({
+        model: this.model,
+        template: '#tpl-feature-search'
+      });
+      return this.resultView = new app.ProductFeatureResultView({
+        collection: this.collection,
+        template: '#tpl-feature-results'
+      });
+    };
+
+    ProductFeatureView.prototype.renader = function() {};
+
+    ProductFeatureView.prototype.search = function() {
+      return this.collection.fetch();
+    };
+
+    ProductFeatureView.prototype.reset = function() {
+      return this.collection.reset([]);
+    };
+
+    ProductFeatureView.prototype.close = function() {
+      if (this.searchView != null) this.searchView.close();
+      if (this.resultView != null) return this.resultView.close();
+    };
+
+    return ProductFeatureView;
+
+  })(app.BaseView);
+
+  ProductFeatureEditView = (function(_super) {
+
+    __extends(ProductFeatureEditView, _super);
+
+    function ProductFeatureEditView() {
+      ProductFeatureEditView.__super__.constructor.apply(this, arguments);
+    }
+
+    ProductFeatureEditView.prototype.tagName = 'div';
+
+    ProductFeatureEditView.prototype.template = app.BaseView.getTemplate('#tpl-feature-edit');
+
+    ProductFeatureEditView.prototype.isModalEditView = function() {
+      return true;
+    };
+
+    ProductFeatureEditView.prototype.render = function() {
+      this.$el.empty();
+      this.$el.html(this.template({
+        m: this.model.toJSON()
+      }));
+      $('#modal-temp-placeholder').html(this.el);
+      this.$('#modal-feature-edit').modal();
+      return this;
+    };
+
+    ProductFeatureEditView.prototype.hideModal = function() {
+      return this.$('#modal-feature-edit').modal('hide');
+    };
+
+    ProductFeatureEditView.prototype.readInputs = function() {
+      return this.model.set({
+        name: this.$('#feature-name').val(),
+        data_type: this.$('#feature-datatype').val(),
+        importance: this.$('#feature-importance').val(),
+        description: this.$('#feature-desc').val()
+      });
+    };
+
+    return ProductFeatureEditView;
+
+  })(app.TableItemEditView);
+
+  ProductFeatureRowView = (function(_super) {
+
+    __extends(ProductFeatureRowView, _super);
+
+    function ProductFeatureRowView() {
+      ProductFeatureRowView.__super__.constructor.apply(this, arguments);
+    }
+
+    ProductFeatureRowView.prototype.template = app.BaseView.getTemplate('#tpl-feature-row');
+
+    return ProductFeatureRowView;
+
+  })(app.TableItemDisplayView);
+
   this.app = (_ref = window.app) != null ? _ref : {};
 
   this.app.ProductCategoryView = ProductCategoryView;
@@ -281,5 +421,15 @@
   this.app.FeatureCategoryEditView = FeatureCategoryEditView;
 
   this.app.FeatureCategoryRowView = FeatureCategoryRowView;
+
+  this.app.ProductFeatureView = ProductFeatureView;
+
+  this.app.ProductFeatureSearchView = ProductFeatureSearchView;
+
+  this.app.ProductFeatureResultView = ProductFeatureResultView;
+
+  this.app.ProductFeatureEditView = ProductFeatureEditView;
+
+  this.app.ProductCategoryRowView = ProductCategoryRowView;
 
 }).call(this);

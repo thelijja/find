@@ -167,24 +167,38 @@
       item.on('edit', this.itemEdit, this);
       item.on('cancel', this.cancelEdit, this);
       editView = this.createItemEditView(item);
-      return this.$('tbody').prepend(editView.render().el);
+      if (editView.isModalEditView()) {
+        return editView.render();
+      } else {
+        return this.$('tbody').prepend(editView.render().el);
+      }
     };
 
     SearchResultTableView.prototype.itemSave = function(view) {
-      var model, that;
+      var model, newModel, that;
       that = this;
       model = view.model;
+      newModel = model.isNew();
       return model.save(null, {
         wait: true,
         success: function(rmodel, response) {
           var rowView, vel;
-          vel = view.$el;
           rowView = that.createItemDisplayView(model);
-          vel.replaceWith(rowView.render().el);
-          return vel.attr('id', model.get('id'));
+          if (view.isModalEditView()) {
+            if (newModel) {
+              this.$('tbody').prepend(rowView.render().el);
+            } else {
+              this.$('#' + model.id).replaceWith(rowView.render().el);
+            }
+            return view.hideModal();
+          } else {
+            vel = view.$el;
+            vel.replaceWith(rowView.render().el);
+            return vel.attr('id', model.get('id'));
+          }
         },
         error: function(rmodel, errors) {
-          return that.showError('Error saving category item..');
+          return that.showError(errors);
         }
       });
     };
@@ -213,8 +227,12 @@
       vel = view.$el;
       model = view.model;
       editView = this.createItemEditView(model);
-      vel.replaceWith(editView.render().el);
-      return vel.attr('id', model.get('id'));
+      if (editView.isModalEditView()) {
+        return editView.render();
+      } else {
+        vel.replaceWith(editView.render().el);
+        return vel.attr('id', model.get('id'));
+      }
     };
 
     SearchResultTableView.prototype.cancelEdit = function(view) {
@@ -225,8 +243,10 @@
       if (model.isNew()) {
         return view.remove();
       } else {
-        rowView = that.createItemDisplayView(model);
-        return vel.replaceWith(rowView.render().el);
+        if (!view.isModalEditView()) {
+          rowView = that.createItemDisplayView(model);
+          return vel.replaceWith(rowView.render().el);
+        }
       }
     };
 
@@ -316,6 +336,10 @@
     };
 
     TableItemEditView.prototype.readInputs = function() {};
+
+    TableItemEditView.prototype.isModalEditView = function() {
+      return false;
+    };
 
     return TableItemEditView;
 

@@ -13,6 +13,14 @@ class FeatureCategories extends app.BaseCollection
 	model:app.FeatureCategory
 	url:'api/admin/featurecats'
 	
+	
+# ## Collections related to product feature
+class ProductFeatures extends app.BaseCollection
+	model:app.ProductFeature
+	url:'api/admin/features'	
+
+
 @app = window.app ? {}
 @app.ProductCategories = ProductCategories
 @app.FeatureCategories = FeatureCategories
+@app.ProductFeatures = ProductFeatures

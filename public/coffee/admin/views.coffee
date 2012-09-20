@@ -122,6 +122,70 @@ class FeatureCategoryRowView extends app.TableItemDisplayView
 
 
 # ========================================================================================================================
+# # Begin FEATURE Views
+
+# ## Feature Search View
+class ProductFeatureSearchView extends app.SearchCriteriaView
+
+# ## Feature Result View
+class ProductFeatureResultView extends app.SearchResultTableView
+	createItemDisplayView: (model) ->
+		new ProductFeatureRowView model:model
+	
+	createItemEditView: (model) ->
+		new ProductFeatureEditView model:model
+		
+	createEmptyModel: ->
+		new app.ProductFeature name:'', importance:0
+  
+# ## Feature Main View
+class ProductFeatureView extends app.BaseView
+	initialize:->
+		@model.on 'search', @search, @				# When search model trigger 'searh' we need to search and set the collection
+		@model.on 'reset', @reset, @				# WHen search model trigger 'reset', collection will be emptied.
+		@searchView = new app.ProductFeatureSearchView model: @model, template:'#tpl-feature-search'
+		@resultView = new app.ProductFeatureResultView collection: @collection, template:'#tpl-feature-results'
+		
+	renader:->
+	
+	search:->
+		# TODO: Write search logic...
+		@collection.fetch()
+		
+	reset:->
+		@collection.reset []		
+
+	close:->
+		@searchView.close() if @searchView?
+		@resultView.close() if @resultView?	
+  
+
+# ## Feature Item edit view
+class ProductFeatureEditView extends app.TableItemEditView
+	tagName:'div'
+	template: app.BaseView.getTemplate('#tpl-feature-edit')
+	isModalEditView:->								# This is modal edit view, will do the rendering ourself
+		true
+		
+	render:->
+		@$el.empty()
+		@$el.html @template( m: @model.toJSON() )
+		$('#modal-temp-placeholder').html(@el)
+		@$('#modal-feature-edit').modal()
+		@
+
+	hideModal:->
+		@$('#modal-feature-edit').modal('hide')
+
+	readInputs:->
+		@model.set name:@$('#feature-name').val(), data_type:@$('#feature-datatype').val(), importance:@$('#feature-importance').val(), description:@$('#feature-desc').val()
+		
+		
+# ## Feature Item row view
+class ProductFeatureRowView extends app.TableItemDisplayView
+	template: app.BaseView.getTemplate('#tpl-feature-row')	
+
+# ========================================================================================================================
 @app = window.app ? {}
 @app.ProductCategoryView = ProductCategoryView
 @app.CategorySearchView = CategorySearchView
@@ -134,3 +198,9 @@ class FeatureCategoryRowView extends app.TableItemDisplayView
 @app.FeatureCategoryResultView = FeatureCategoryResultView
 @app.FeatureCategoryEditView = FeatureCategoryEditView
 @app.FeatureCategoryRowView = FeatureCategoryRowView
+
+@app.ProductFeatureView = ProductFeatureView
+@app.ProductFeatureSearchView = ProductFeatureSearchView
+@app.ProductFeatureResultView = ProductFeatureResultView
+@app.ProductFeatureEditView = ProductFeatureEditView
+@app.ProductCategoryRowView = ProductCategoryRowView

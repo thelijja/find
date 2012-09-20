@@ -11,7 +11,8 @@ class Create_Schema {
 	{		
 		$this->createProductCategoryTable_0010();	
 		$this->createProductFeatureCategoryTable_0020();
-		$this->createProductFeatureTable_0030();	
+		$this->createProductFeatureTable_0030();
+		$this->createProductFeatureSelectionTable_0035();
 		$this->createProductTable_0040();	
 		$this->createProductMediaTable_0050();
 		$this->createProductContactTable_0060();
@@ -29,9 +30,29 @@ class Create_Schema {
 		$this->dropProductContactTable_0060();
 		$this->dropProductMediaTable_0050();
 		$this->dropProductTable_0040();
+		$this->dropProductFeatureSelectionTable_0035();
 		$this->dropProductFeatureTable_0030();
 		$this->droproductFeatureCategoryTable_0020();
 		$this->dropProductCategoryTable_0010();				
+	}
+	
+	private function createProductFeatureSelectionTable_0035() {
+		Schema::create('flk_product_feature_selection', function($t) {
+			$t->increments('id')->unsigned();
+			$t->integer('feature_id')->unsigned();
+			$t->string('feature_value',100)->unsigned();
+			$t->integer('display_order');
+			
+			// Foreign key references
+			$t->foreign('feature_id')->references('id')->on('flk_product_feature');
+
+			// Adding indexes
+			$t->index('feature_id');						
+		});
+	}
+	
+	private function dropProductFeatureSelectionTable_0035() {
+		Schema::drop('flk_product_feature_selection');
 	}
 
 	private function createProductFeatureSet_0070() {
@@ -129,8 +150,9 @@ class Create_Schema {
 	private function createProductFeatureCategoryTable_0020() {
 
 		Schema::create('flk_feature_category', function($t) {
-			$t->integer('id')->unsigned()->primary('id');
+			$t->increments('id')->unsigned();
 			$t->string('code',50)->unique();
+			$t->string('name', 100)->nullable();
 		});
 	}
 
@@ -146,7 +168,7 @@ class Create_Schema {
 			$t->string('name', 100);
 			$t->integer('data_type')->unsigned()->default(0);
 			$t->integer('importance')->default(0);
-			$t->text('description');
+			$t->text('description')->nullable();
 			$t->integer('product_category_id')->unsigned()->nullable();
 			$t->integer('feature_category_id')->unsigned()->nullable();
 

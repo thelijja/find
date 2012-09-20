@@ -1,6 +1,6 @@
 # Views
-
-# # Begin Category Views
+# ========================================================================================================================
+# # Begin CATEGORY Views
 # ## Category Search View ------------------------------------------------------------------------------------------------
 class CategorySearchView extends app.SearchCriteriaView
 	
@@ -18,7 +18,6 @@ class CategoryResultView extends app.SearchResultTableView
 	createEmptyModel: ->
 		new app.ProductCategory code:'', name:''
 		
-	
 
 # ## Category Main View ------------------------------------------------------------------------------------------------
 class ProductCategoryView extends app.BaseView
@@ -41,6 +40,7 @@ class ProductCategoryView extends app.BaseView
 		@searchView.close() if @searchView?
 		@resultView.close() if @resultView?
 		
+
 # ## CategoryItem edit view --------------------------------------------------------------------------------------------
 class ProductCategoryEditView extends app.TableItemEditView
 	template: app.BaseView.getTemplate('#tpl-category-edit')
@@ -55,18 +55,22 @@ class ProductCategoryEditView extends app.TableItemEditView
 		@$("#parentId option[value='" + @model.get('parent_id') + "']").attr('selected', "selected") if @model.has('parent_id')
 		@
 						
-		
+	
 # ## Category Item row view ---------------------------------------------------------------------------------------------
 class ProductCategoryRowView extends app.TableItemDisplayView
 	template: app.BaseView.getTemplate('#tpl-category-row')
 		
 # # End Category Views
 
+
+
+
 # ========================================================================================================================
-# # Begin Feature Category Views
+# # Begin FEATURE CATEGORY Views
 
 # ## Feature Category Search View ------------------------------------------------------------------------------------------------
 class FeatureCategorySearchView extends app.SearchCriteriaView
+
 
 # ## Feature Category Result View ------------------------------------------------------------------------------------------
 class FeatureCategoryResultView extends app.SearchResultTableView
@@ -77,8 +81,9 @@ class FeatureCategoryResultView extends app.SearchResultTableView
 		new FeatureCategoryEditView model:model
 		
 	createEmptyModel: ->
-		new app.FeatureCategory code:''
+		new app.FeatureCategory code:'', name:''
 		
+
 # ## Feature Category Main View ------------------------------------------------------------------------------------------------
 class FeatureCategoryView extends app.BaseView
 	initialize:->
@@ -100,20 +105,23 @@ class FeatureCategoryView extends app.BaseView
 		@searchView.close() if @searchView?
 		@resultView.close() if @resultView?
 
+
 # ## Feature CategoryItem edit view --------------------------------------------------------------------------------------------
 class FeatureCategoryEditView extends app.TableItemEditView
 	template: app.BaseView.getTemplate('#tpl-featurecat-edit')
 		
 	readInputs:->
-		@model.set code:@$('.code-edit').val()
+		@model.set code:@$('.code-edit').val(), name:@$('.name-edit').val()
 	
+
 # ## Feature Category Item row view ---------------------------------------------------------------------------------------------
 class FeatureCategoryRowView extends app.TableItemDisplayView
 	template: app.BaseView.getTemplate('#tpl-featurecat-row')			
 
-
 # # End Feature Category Views
 
+
+# ========================================================================================================================
 @app = window.app ? {}
 @app.ProductCategoryView = ProductCategoryView
 @app.CategorySearchView = CategorySearchView

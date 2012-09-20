@@ -14,6 +14,7 @@
     }
 
     AdminRouter.prototype.routes = {
+      '': 'showCategories',
       'categories': 'showCategories',
       'featurecats': 'showFeatureCats'
     };

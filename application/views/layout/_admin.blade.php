@@ -14,12 +14,14 @@
 	@yield_section
 </head>
 <body>
-	<div class="admin-wrapper">
+	<div class="container-fluid">
 		<div class="row-fluid admin-header" >
 			<h2>::Admin Portal</h2>
 		</div>
-		<div class="row-fluid admin-nav">
+		<div class="row-fluid pull-right">
+			@section('nav')
 			
+			@yield_section
 		</div>
 		<div class="row-fluid">
 		@yield('content')
@@ -32,6 +34,7 @@
 	{{ HTML::script('js/lib/underscore-min.js')}}
 	{{ HTML::script('js/lib/bootstrap.min.js')}}
 	{{ HTML::script('js/lib/backbone-min.js')}}
+	{{ HTML::script('js/base/bootstrap-addon.js')}}
 	{{ HTML::script('js/base/base.js')}}
 	@yield_section
 	<!-- Javascript application -->	

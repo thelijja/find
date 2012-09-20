@@ -16,6 +16,7 @@ class FeatureCategory extends app.BaseModel
 	urlRoot: 'api/admin/featurecats'
 	default:
 		code:""
+		name:""
 
 @app = window.app ? {}
 @app.ProductCategory = ProductCategory

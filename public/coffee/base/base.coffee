@@ -23,7 +23,7 @@ class BaseView extends Backbone.View
 		_.template(tpl.html())					# subview usage ->  template:app.BaseView.getTemplate('#tpl-id')
 		
 	renderDefault:->							# simple implementation of render using the template and model of its own
-		@$el.html(_.template @template m: @model.toJSON())		
+		@$el.html @template(m: @model.toJSON())		
 		@
 
 	showError: (msg)->

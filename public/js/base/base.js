@@ -58,9 +58,9 @@
     };
 
     BaseView.prototype.renderDefault = function() {
-      this.$el.html(_.template(this.template({
+      this.$el.html(this.template({
         m: this.model.toJSON()
-      })));
+      }));
       return this;
     };
 

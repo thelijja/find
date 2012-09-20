@@ -57,7 +57,8 @@
     FeatureCategory.prototype.urlRoot = 'api/admin/featurecats';
 
     FeatureCategory.prototype["default"] = {
-      code: ""
+      code: "",
+      name: ""
     };
 
     return FeatureCategory;

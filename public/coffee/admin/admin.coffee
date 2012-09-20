@@ -2,6 +2,7 @@
 
 class AdminRouter extends app.BaseRouter
 	routes:
+		'':'showCategories'
 		'categories' : 'showCategories'
 		'featurecats' : 'showFeatureCats'
 	

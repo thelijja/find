@@ -176,7 +176,8 @@
 
     FeatureCategoryResultView.prototype.createEmptyModel = function() {
       return new app.FeatureCategory({
-        code: ''
+        code: '',
+        name: ''
       });
     };
 
@@ -236,7 +237,8 @@
 
     FeatureCategoryEditView.prototype.readInputs = function() {
       return this.model.set({
-        code: this.$('.code-edit').val()
+        code: this.$('.code-edit').val(),
+        name: this.$('.name-edit').val()
       });
     };
 

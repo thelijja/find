@@ -74,6 +74,7 @@ class Api_Admin_Controller extends Base_Controller {
 		//TODO: Do some validation here before saving..
 		$dbFeatureCat = new FeatureCategory();
 		$dbFeatureCat->code = $featureCat->code;
+		$dbFeatureCat->name = $featureCat->name;
 		$dbFeatureCat->save();
 		return $dbFeatureCat->toJson();
 	}
@@ -84,6 +85,7 @@ class Api_Admin_Controller extends Base_Controller {
 		$dbFeatureCat = FeatureCategory::find($featureCat->id);
 		if (!is_null($dbFeatureCat)) {
 			$dbFeatureCat->code = $featureCat->code;
+			$dbFeatureCat->name = $featureCat->name;
 			$dbFeatureCat->save();
 			return $dbFeatureCat->toJson();
 		}
@@ -99,6 +101,25 @@ class Api_Admin_Controller extends Base_Controller {
 	}	
 
 
+
+	/*
+	 * Product Features REST API
+	 */
+	public function get_feature($id = -1) {
+		
+	}
+	
+	public function post_feature() {
+		
+	}
+	
+	public function put_feature() {
+		
+	}
+	
+	public function delete_feature($id) {
+		
+	}
 }
 
 ?>

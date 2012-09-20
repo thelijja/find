@@ -4,6 +4,9 @@ body {
 
 .wrapper {
 	background-color: white;
-	width:960px;
 	margin:auto;
+}
+
+form table {
+	margin-bottom: 0px;
 }

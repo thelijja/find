@@ -9,8 +9,8 @@ class Api_Admin_Controller extends Base_Controller {
 	 */ 
 	public function get_category($id = -1) {		
 		if ($id = -1) {			
-			$cats = ProductCategory::all();
-			return ProductCategory::allToJson($cats);
+			$cats = ProductCategory::all();	
+			return eloquent_to_json($cats);
 		}				
 	}
 	
@@ -64,7 +64,7 @@ class Api_Admin_Controller extends Base_Controller {
 	public function get_featureCategory($id = -1) {
 		if (is_null($id) || $id = -1) {
 			$featureCats = FeatureCategory::all();
-			return FeatureCategory::allToJson($featureCats);
+			return eloquent_to_json($featureCats);
 		}
 	}
 	
@@ -108,7 +108,7 @@ class Api_Admin_Controller extends Base_Controller {
 	public function get_feature($id = -1) {
 		if (is_null($id) || $id = -1) {
 			$feature = ProductFeature::all();
-			return ProductFeature::allToJson($feature);
+			return eloquent_to_json($feature);
 		}		
 	}
 	

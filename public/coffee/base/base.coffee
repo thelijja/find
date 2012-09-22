@@ -133,7 +133,7 @@ class SearchResultTableView extends BaseView
 					vel = view.$el							# Get the element for current view for this item		
 					# Create new row view with model				
 					vel.replaceWith rowView.render().el		# Update the same row with new view
-					vel.attr 'id', model.get('id')			# Also with id
+					vel.attr 'id', model.id					# Also with id
 				
 			error: (rmodel, errors) ->
 				that.showError(errors) 
@@ -158,7 +158,7 @@ class SearchResultTableView extends BaseView
 			editView.render()
 		else
 			vel.replaceWith editView.render().el		# Update the same row with new edit view
-			vel.attr 'id', model.get('id')				# Also with id
+			vel.attr 'id', model.id						# Also with id
 		
 	cancelEdit:(view) ->
 		that = @

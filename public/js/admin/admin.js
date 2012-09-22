@@ -21,36 +21,18 @@
     };
 
     AdminRouter.prototype.showCategories = function() {
-      var categories, searchModel;
       if (this.currentView != null) this.currentView.close();
-      searchModel = new app.ProductCategorySearchModel();
-      categories = new app.ProductCategories();
-      return this.currentView = new app.ProductCategoryView({
-        collection: categories,
-        model: searchModel
-      });
+      return this.currentView = new app.ProductCategoryView;
     };
 
     AdminRouter.prototype.showFeatureCats = function() {
-      var categories, searchModel;
       if (this.currentView != null) this.currentView.close();
-      searchModel = new app.FeatureCategorySearchModel;
-      categories = new app.FeatureCategories;
-      return this.currentView = new app.FeatureCategoryView({
-        collection: categories,
-        model: searchModel
-      });
+      return this.currentView = new app.FeatureCategoryView;
     };
 
     AdminRouter.prototype.showFeatures = function() {
-      var features, searchModel;
       if (this.currentView != null) this.currentView.close();
-      searchModel = new app.FeatureSearchModel;
-      features = new app.ProductFeatures;
-      return this.currentView = new app.ProductFeatureView({
-        collection: features,
-        model: searchModel
-      });
+      return this.currentView = new app.ProductFeatureView;
     };
 
     return AdminRouter;

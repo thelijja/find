@@ -194,7 +194,7 @@
           } else {
             vel = view.$el;
             vel.replaceWith(rowView.render().el);
-            return vel.attr('id', model.get('id'));
+            return vel.attr('id', model.id);
           }
         },
         error: function(rmodel, errors) {
@@ -231,7 +231,7 @@
         return editView.render();
       } else {
         vel.replaceWith(editView.render().el);
-        return vel.attr('id', model.get('id'));
+        return vel.attr('id', model.id);
       }
     };
 

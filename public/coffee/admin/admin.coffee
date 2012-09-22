@@ -9,22 +9,15 @@ class AdminRouter extends app.BaseRouter
 	
 	showCategories: ->
 		@currentView.close() if @currentView?
-		searchModel = new app.ProductCategorySearchModel()
-		categories = new app.ProductCategories()		
-		@currentView = new app.ProductCategoryView collection:categories, model:searchModel
+		@currentView = new app.ProductCategoryView
 		
-					
 	showFeatureCats: ->
 		@currentView.close() if @currentView?
-		searchModel = new app.FeatureCategorySearchModel
-		categories = new app.FeatureCategories
-		@currentView = new app.FeatureCategoryView collection:categories, model:searchModel
+		@currentView = new app.FeatureCategoryView 
 		
 	showFeatures:->
 		@currentView.close() if @currentView?
-		searchModel = new app.FeatureSearchModel
-		features = new app.ProductFeatures
-		@currentView = new app.ProductFeatureView collection:features, model:searchModel
+		@currentView = new app.ProductFeatureView 
 
 @app.AdminRouter = AdminRouter
 

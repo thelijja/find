@@ -22,6 +22,9 @@ class CategoryResultView extends app.SearchResultTableView
 # ## Category Main View ------------------------------------------------------------------------------------------------
 class ProductCategoryView extends app.BaseView
 	initialize:->
+		@model = new app.ProductCategorySearchModel()
+		@collection = new app.ProductCategories()
+		@collection.fetch()
 		@model.on 'search', @search, @				# When search model trigger 'searh' we need to search and set the collection
 		@model.on 'reset', @reset, @				# WHen search model trigger 'reset', collection will be emptied.
 		@searchView = new app.CategorySearchView model: @model, template:'#tpl-category-search'
@@ -87,6 +90,8 @@ class FeatureCategoryResultView extends app.SearchResultTableView
 # ## Feature Category Main View ------------------------------------------------------------------------------------------------
 class FeatureCategoryView extends app.BaseView
 	initialize:->
+		@model = new app.FeatureCategorySearchModel
+		@collection = new app.FeatureCategories
 		@model.on 'search', @search, @				# When search model trigger 'searh' we need to search and set the collection
 		@model.on 'reset', @reset, @				# WHen search model trigger 'reset', collection will be emptied.
 		@searchView = new app.FeatureCategorySearchView model: @model, template:'#tpl-featurecat-search'
@@ -141,6 +146,8 @@ class ProductFeatureResultView extends app.SearchResultTableView
 # ## Feature Main View
 class ProductFeatureView extends app.BaseView
 	initialize:->
+		@model = new app.FeatureSearchModel
+		@collection = new app.ProductFeatures		
 		@model.on 'search', @search, @				# When search model trigger 'searh' we need to search and set the collection
 		@model.on 'reset', @reset, @				# WHen search model trigger 'reset', collection will be emptied.
 		@searchView = new app.ProductFeatureSearchView model: @model, template:'#tpl-feature-search'

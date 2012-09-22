@@ -61,6 +61,9 @@
     }
 
     ProductCategoryView.prototype.initialize = function() {
+      this.model = new app.ProductCategorySearchModel();
+      this.collection = new app.ProductCategories();
+      this.collection.fetch();
       this.model.on('search', this.search, this);
       this.model.on('reset', this.reset, this);
       this.searchView = new app.CategorySearchView({
@@ -194,6 +197,8 @@
     }
 
     FeatureCategoryView.prototype.initialize = function() {
+      this.model = new app.FeatureCategorySearchModel;
+      this.collection = new app.FeatureCategories;
       this.model.on('search', this.search, this);
       this.model.on('reset', this.reset, this);
       this.searchView = new app.FeatureCategorySearchView({
@@ -312,6 +317,8 @@
     }
 
     ProductFeatureView.prototype.initialize = function() {
+      this.model = new app.FeatureSearchModel;
+      this.collection = new app.ProductFeatures;
       this.model.on('search', this.search, this);
       this.model.on('reset', this.reset, this);
       this.searchView = new app.ProductFeatureSearchView({

@@ -33,7 +33,7 @@
 	{{ HTML::script('js/lib/jquery-1.8.1.min.js')}}
 	{{ HTML::script('js/lib/underscore-min.js')}}
 	{{ HTML::script('js/lib/bootstrap.min.js')}}
-	{{ HTML::script('js/lib/backbone-min.js')}}
+	{{ HTML::script('js/lib/backbone.js')}}
 	{{ HTML::script('js/base/bootstrap-addon.js')}}
 	{{ HTML::script('js/base/base.js')}}
 	@yield_section

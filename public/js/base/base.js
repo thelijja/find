@@ -1,5 +1,5 @@
 (function() {
-  var BaseCollection, BaseModel, BaseRouter, BaseView, SearchCriteriaView, SearchResultTableView, TableItemDisplayView, TableItemEditView, _ref,
+  var BaseCollection, BaseModel, BaseRouter, BaseView, LookupApiUrl, LookupDropDownView, LookupEntries, LookupEntry, SearchCriteriaView, SearchResultTableView, TableItemDisplayView, TableItemEditView, _ref,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
@@ -84,6 +84,56 @@
     return BaseView;
 
   })(Backbone.View);
+
+  LookupEntry = (function(_super) {
+
+    __extends(LookupEntry, _super);
+
+    function LookupEntry() {
+      LookupEntry.__super__.constructor.apply(this, arguments);
+    }
+
+    return LookupEntry;
+
+  })(BaseModel);
+
+  LookupEntries = (function(_super) {
+
+    __extends(LookupEntries, _super);
+
+    function LookupEntries() {
+      LookupEntries.__super__.constructor.apply(this, arguments);
+    }
+
+    LookupEntries.prototype.model = LookupEntry;
+
+    LookupEntries.prototype.url = '';
+
+    LookupEntries.prototype.initialize = function(model, args) {
+      return this.url = args.url;
+    };
+
+    return LookupEntries;
+
+  })(BaseCollection);
+
+  LookupApiUrl = (function(_super) {
+
+    __extends(LookupApiUrl, _super);
+
+    function LookupApiUrl() {
+      LookupApiUrl.__super__.constructor.apply(this, arguments);
+    }
+
+    LookupApiUrl.prototype.defaults = {
+      category: '/api/lookup/category',
+      featurecat: '/api/lookup/featurecat',
+      datatype: '/api/lookup/datatype'
+    };
+
+    return LookupApiUrl;
+
+  })(BaseModel);
 
   SearchCriteriaView = (function(_super) {
 
@@ -345,6 +395,27 @@
 
   })(BaseView);
 
+  LookupDropDownView = (function(_super) {
+
+    __extends(LookupDropDownView, _super);
+
+    function LookupDropDownView() {
+      LookupDropDownView.__super__.constructor.apply(this, arguments);
+    }
+
+    LookupDropDownView.prototype.render = function() {
+      var thisEl;
+      thisEl = this.$el;
+      this.collection.each(function(item) {
+        return thisEl.append('<option value="' + item.id + '">' + item.get('name') + '</option>');
+      });
+      return this;
+    };
+
+    return LookupDropDownView;
+
+  })(BaseView);
+
   BaseRouter = (function(_super) {
 
     __extends(BaseRouter, _super);
@@ -365,6 +436,10 @@
 
   this.app.BaseView = BaseView;
 
+  this.app.LookupEntry = LookupEntry;
+
+  this.app.LookupEntries = LookupEntries;
+
   this.app.SearchCriteriaView = SearchCriteriaView;
 
   this.app.SearchResultTableView = SearchResultTableView;
@@ -373,6 +448,10 @@
 
   this.app.TableItemEditView = TableItemEditView;
 
+  this.app.LookupDropDownView = LookupDropDownView;
+
   this.app.BaseRouter = BaseRouter;
+
+  this.app.lookupApiUrl = new LookupApiUrl;
 
 }).call(this);

@@ -287,13 +287,19 @@
 
     ProductFeatureResultView.prototype.createItemDisplayView = function(model) {
       return new ProductFeatureRowView({
-        model: model
+        model: model,
+        productcats: this.categories,
+        featurecats: this.featurecats,
+        datatypes: this.datatypes
       });
     };
 
     ProductFeatureResultView.prototype.createItemEditView = function(model) {
       return new ProductFeatureEditView({
-        model: model
+        model: model,
+        productcats: this.categories,
+        featurecats: this.featurecats,
+        datatypes: this.datatypes
       });
     };
 
@@ -302,6 +308,22 @@
         name: '',
         importance: 0
       });
+    };
+
+    ProductFeatureResultView.prototype.initialize = function() {
+      ProductFeatureResultView.__super__.initialize.apply(this, arguments);
+      this.categories = new app.LookupEntries(null, {
+        url: app.lookupApiUrl.get('category')
+      });
+      this.featurecats = new app.LookupEntries(null, {
+        url: app.lookupApiUrl.get('featurecat')
+      });
+      this.datatypes = new app.LookupEntries(null, {
+        url: app.lookupApiUrl.get('datatype')
+      });
+      this.categories.fetch();
+      this.featurecats.fetch();
+      return this.datatypes.fetch();
     };
 
     return ProductFeatureResultView;
@@ -372,6 +394,27 @@
         m: this.model.toJSON()
       }));
       $('#modal-temp-placeholder').html(this.el);
+      (new app.LookupDropDownView({
+        el: '#feature-prodcategory',
+        collection: this.options.productcats
+      })).render();
+      (new app.LookupDropDownView({
+        el: '#feature-category',
+        collection: this.options.featurecats
+      })).render();
+      (new app.LookupDropDownView({
+        el: '#feature-datatype',
+        collection: this.options.datatypes
+      })).render();
+      if (this.model.has('product_category_id')) {
+        this.$("#feature-prodcategory option[value='" + this.model.get('product_category_id') + "']").attr('selected', "selected");
+      }
+      if (this.model.has('feature_category_id')) {
+        this.$("#feature-category option[value='" + this.model.get('feature_category_id') + "']").attr('selected', "selected");
+      }
+      if (this.model.has('data_type')) {
+        this.$("#feature-datatype option[value='" + this.model.get('data_type') + "']").attr('selected', "selected");
+      }
       this.$('#modal-feature-edit').modal();
       return this;
     };
@@ -385,7 +428,9 @@
         name: this.$('#feature-name').val(),
         data_type: this.$('#feature-datatype').val(),
         importance: this.$('#feature-importance').val(),
-        description: this.$('#feature-desc').val()
+        description: this.$('#feature-desc').val(),
+        product_category_id: this.$('#feature-prodcategory').val(),
+        feature_category_id: this.$('#feature-category').val()
       });
     };
 
@@ -402,6 +447,34 @@
     }
 
     ProductFeatureRowView.prototype.template = app.BaseView.getTemplate('#tpl-feature-row');
+
+    ProductFeatureRowView.prototype.initialize = function() {
+      var dt, fc, pc;
+      if (this.model.get('data_type') != null) {
+        dt = this.options.datatypes.get(this.model.get('data_type'));
+      }
+      if (dt != null) {
+        this.model.set({
+          dataTypeDesc: dt.get('name')
+        });
+      }
+      if (this.model.get('feature_category_id') != null) {
+        fc = this.options.featurecats.get(this.model.get('feature_category_id'));
+      }
+      if (fc != null) {
+        this.model.set({
+          featureCategory: fc.get('name')
+        });
+      }
+      if (this.model.get('product_category_id') != null) {
+        pc = this.options.productcats.get(this.model.get('product_category_id'));
+      }
+      if (pc != null) {
+        return this.model.set({
+          productCategory: pc.get('name')
+        });
+      }
+    };
 
     return ProductFeatureRowView;
 

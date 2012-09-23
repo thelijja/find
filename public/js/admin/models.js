@@ -25,7 +25,7 @@
 
     ProductCategory.prototype.urlRoot = '/api/admin/categories';
 
-    ProductCategory.prototype["default"] = {
+    ProductCategory.prototype.defaults = {
       code: "",
       name: ""
     };
@@ -56,7 +56,7 @@
 
     FeatureCategory.prototype.urlRoot = 'api/admin/featurecats';
 
-    FeatureCategory.prototype["default"] = {
+    FeatureCategory.prototype.defaults = {
       code: "",
       name: ""
     };

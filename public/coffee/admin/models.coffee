@@ -5,7 +5,7 @@ class ProductCategorySearchModel extends app.BaseModel
 
 class ProductCategory extends app.BaseModel
 	urlRoot:'/api/admin/categories'
-	default:
+	defaults:
 		code:""
 		name:""
 
@@ -14,7 +14,7 @@ class FeatureCategorySearchModel extends app.BaseModel
 
 class FeatureCategory extends app.BaseModel
 	urlRoot: 'api/admin/featurecats'
-	default:
+	defaults:
 		code:""
 		name:""
 

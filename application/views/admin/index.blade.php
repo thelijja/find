@@ -157,8 +157,10 @@
 				<tr>
 					<th class="id-col span1">#</th>
 					<th class="span3">Name</th>
-					<th class="span2">Data type</th>
-					<th class="span2">Importance</th>
+					<th class="span1">Data type</th>
+					<th class="span1">Importance</th>
+					<th class="span2">Product Category</th>
+					<th class="span2">Feature Category</th>
 					<th>Description</th>
 					<th class="tc-tool"><div class="pull-right"><a id='btn-add' class="btn btn-primary" rel="tooltip" title="Add new"><i class="icon-plus icon-white"></i></a></div></th>
 				<tr>
@@ -186,12 +188,6 @@
 						<label class="control-label" for="feature-datatype">Data type</label>
 						<div class="controls">
 							<select id="feature-datatype">
-								<option value="0">Text</option>
-								<option value="1">Integer</option>
-								<option value="3">Date</option>
-								<option value="4">Decimal</option>
-								<option value="5">Yes/No</option>
-								<option value="6">Choice</option>
 							</select>
 						</div>
 					</div>
@@ -201,6 +197,20 @@
 							<input type="text" class="input-small" id="feature-importance" value="<%= m.importance %>">
 						</div>
 					</div>
+					<div class="control-group">
+						<label class="control-label" for="feature-prodcategory">Product Category</label>
+						<div class="controls">
+							<select id="feature-prodcategory">
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="feature-category">Product Category</label>
+						<div class="controls">
+							<select id="feature-category">
+							</select>
+						</div>
+					</div>						
 					<div class="control-group">
 						<label class="control-label" for="feature-desc">Description</label>
 						<div class="controls">
@@ -219,8 +229,10 @@
 	<script type="text/template" id="tpl-feature-row">
 		<td class="id-col span1"><%= m.id %></td>
 		<td class="span3"><%= m.name %></td>
-		<td class="span2"><%= m.data_type %></td>
-		<td class="span2"><%= m.importance %></td>
+		<td class="span1"><%= m.dataTypeDesc %></td>
+		<td class="span1"><%= m.importance %></td>
+		<td class="span2"><% _.isUndefined(m.productCategory)? print(''): print(m.productCategory) %></td>
+		<td class="span2"><% _.isUndefined(m.featureCategory)? print(''): print(m.featureCategory) %></td>
 		<td ><% _.isUndefined(m.description) || m.description == null? print(''): print( m.description.substring(0,10) + '...' ) %></td>
 		<td class="tc-tool">
 			<div class="pull-right">

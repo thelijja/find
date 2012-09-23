@@ -11,6 +11,9 @@ Route::any('api/admin/featurecats/(:any?)', array('as'=> 'api.admin.featurecats'
 // Registering routes related to Product Features
 Route::any('api/admin/features/(:any?)', array('as'=> 'api.admin.features', 'uses' => 'api.admin@feature'));
 
+// Registering routes related to Lookup
+Route::get('api/lookup/(:any)', array('as'=> 'api.lookup', 'uses' => 'api.lookup@index'));
+
 /*
  * Admin page routes
  */
@@ -124,4 +127,10 @@ Route::filter('csrf', function()
 Route::filter('auth', function()
 {
 	if (Auth::guest()) return Redirect::to('login');
+});
+
+
+// TODO: REMOVE THESE EVENTS LATER....
+Event::listen('laravel.query', function($sql, $bindings, $time) {	
+	Log::info('SQL[' . $time . ']: ' . $sql );
 });

@@ -121,6 +121,8 @@ class Api_Admin_Controller extends Base_Controller {
 		$dbFeature->data_type = $feature->data_type;
 		$dbFeature->importance = $feature->importance;
 		$dbFeature->description = empty($feature->description) ? null: $feature->description;
+		$dbFeature->feature_category_id = $feature->feature_category_id;
+		$dbFeature->product_category_id = $feature->product_category_id;
 		$dbFeature->save();
 		return $dbFeature->toJson();		
 	}
@@ -134,6 +136,8 @@ class Api_Admin_Controller extends Base_Controller {
 			$dbFeature->data_type = $feature->data_type;
 			$dbFeature->importance = $feature->importance;
 			$dbFeature->description = empty($feature->description) ? null: $feature->description;
+			$dbFeature->feature_category_id = $feature->feature_category_id;
+			$dbFeature->product_category_id = $feature->product_category_id;			
 			$dbFeature->save();
 			return $dbFeature->toJson();
 		}

@@ -135,13 +135,23 @@ class ProductFeatureSearchView extends app.SearchCriteriaView
 # ## Feature Result View
 class ProductFeatureResultView extends app.SearchResultTableView
 	createItemDisplayView: (model) ->
-		new ProductFeatureRowView model:model
+		new ProductFeatureRowView model:model, productcats:@categories, featurecats:@featurecats, datatypes:@datatypes
 	
 	createItemEditView: (model) ->
-		new ProductFeatureEditView model:model
+		new ProductFeatureEditView model:model, productcats:@categories, featurecats:@featurecats, datatypes:@datatypes
 		
 	createEmptyModel: ->
 		new app.ProductFeature name:'', importance:0
+  
+	initialize: ->
+		super
+		@categories = new app.LookupEntries null, url:app.lookupApiUrl.get('category')
+		@featurecats = new app.LookupEntries null, url:app.lookupApiUrl.get('featurecat')
+		@datatypes = new app.LookupEntries null, url:app.lookupApiUrl.get('datatype')
+		@categories.fetch()
+		@featurecats.fetch()
+		@datatypes.fetch()
+		
   
 # ## Feature Main View
 class ProductFeatureView extends app.BaseView
@@ -178,6 +188,12 @@ class ProductFeatureEditView extends app.TableItemEditView
 		@$el.empty()
 		@$el.html @template( m: @model.toJSON() )
 		$('#modal-temp-placeholder').html(@el)
+		(new app.LookupDropDownView el:'#feature-prodcategory', collection: @options.productcats).render()
+		(new app.LookupDropDownView el:'#feature-category', collection: @options.featurecats).render()
+		(new app.LookupDropDownView el:'#feature-datatype', collection: @options.datatypes).render()
+		@$("#feature-prodcategory option[value='" + @model.get('product_category_id') + "']").attr('selected', "selected") if @model.has('product_category_id')
+		@$("#feature-category option[value='" + @model.get('feature_category_id') + "']").attr('selected', "selected") if @model.has('feature_category_id')
+		@$("#feature-datatype option[value='" + @model.get('data_type') + "']").attr('selected', "selected") if @model.has('data_type')
 		@$('#modal-feature-edit').modal()
 		@
 
@@ -185,12 +201,25 @@ class ProductFeatureEditView extends app.TableItemEditView
 		@$('#modal-feature-edit').modal('hide')
 
 	readInputs:->
-		@model.set name:@$('#feature-name').val(), data_type:@$('#feature-datatype').val(), importance:@$('#feature-importance').val(), description:@$('#feature-desc').val()
+		@model.set
+			name:@$('#feature-name').val(),
+			data_type:@$('#feature-datatype').val(),
+			importance:@$('#feature-importance').val(),
+			description:@$('#feature-desc').val(),
+			product_category_id:@$('#feature-prodcategory').val()
+			feature_category_id:@$('#feature-category').val()
 		
 		
 # ## Feature Item row view
 class ProductFeatureRowView extends app.TableItemDisplayView
-	template: app.BaseView.getTemplate('#tpl-feature-row')	
+	template: app.BaseView.getTemplate('#tpl-feature-row')
+	initialize:->
+		dt = @options.datatypes.get(@model.get('data_type')) if @model.get('data_type')?		
+		@model.set dataTypeDesc: dt.get('name') if dt?		
+		fc = @options.featurecats.get(@model.get('feature_category_id')) if @model.get('feature_category_id')?
+		@model.set featureCategory: fc.get('name') if fc?
+		pc = @options.productcats.get(@model.get('product_category_id')) if @model.get('product_category_id')?		
+		@model.set productCategory: pc.get('name') if pc?
 
 # ========================================================================================================================
 @app = window.app ? {}

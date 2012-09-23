@@ -36,6 +36,26 @@ class BaseView extends Backbone.View
 	close:->									# Close method is just to remove view contents and unbind events so that
 		@undelegateEvents()						# same dom element can be used to add new view of same type.
 		@$el.empty()
+
+# Lookup data model
+class LookupEntry extends BaseModel
+
+
+# Lookup collection
+class LookupEntries extends BaseCollection
+	model:LookupEntry
+	url: ''
+	initialize: (model, args)->
+		@url = args.url
+
+# Lookup api store
+class LookupApiUrl extends BaseModel
+	defaults:
+		category:'/api/lookup/category'
+		featurecat:'/api/lookup/featurecat'
+		datatype:'/api/lookup/datatype'
+		
+
 		
 # Basic search criteria view
 # Usage:
@@ -231,6 +251,13 @@ class TableItemEditView extends BaseView
 	isModalEditView:->							# This is to determin whether place input form inside the table row or display
 		false									# model view to get user input.
 		
+
+class LookupDropDownView extends BaseView
+	render:->
+		thisEl = @$el
+		@collection.each (item) ->
+			thisEl.append '<option value="' + item.id + '">' + item.get('name') + '</option>'
+		@
 		
 # All routers should be derived from this base class
 class BaseRouter extends Backbone.Router
@@ -240,8 +267,15 @@ class BaseRouter extends Backbone.Router
 @app.BaseModel = BaseModel
 @app.BaseCollection = BaseCollection
 @app.BaseView = BaseView
+@app.LookupEntry = LookupEntry
+@app.LookupEntries = LookupEntries
 @app.SearchCriteriaView = SearchCriteriaView
 @app.SearchResultTableView = SearchResultTableView
 @app.TableItemDisplayView = TableItemDisplayView
 @app.TableItemEditView = TableItemEditView
+@app.LookupDropDownView = LookupDropDownView
 @app.BaseRouter = BaseRouter
+
+
+# Available as instance
+@app.lookupApiUrl = new LookupApiUrl

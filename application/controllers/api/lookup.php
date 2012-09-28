@@ -13,8 +13,14 @@ class Api_Lookup_Controller extends Base_Controller {
 			case 'category': return $this->getCategory();
 			case 'featurecat': return $this->getFeatureCategory();
 			case 'datatype' : return $this->getFeatureDataTypes();
+			case 'categorytree': return $this->getCategoryTree();				
 			default: return array();
 		}
+	}
+	
+	private function getCategoryTree() {
+		
+		return json_encode(Lookup::getCategoryTree());
 	}
 	
 	private function getCategory($level = null) {
@@ -32,17 +38,17 @@ class Api_Lookup_Controller extends Base_Controller {
 	private function getFeatureDataTypes() {
 		if (self::$datatypes == null) {
 			$arr = array();
-			$dt = new stdClass(); $dt->id = 0; $dt->name = 'Text';
+			$dt = new stdClass(); $dt->id = Constants::DDT_TEXT; $dt->name = 'Text';
 			$arr[]= $dt;
-			$dt = new stdClass(); $dt->id = 1; $dt->name = 'Integer';
+			$dt = new stdClass(); $dt->id = Constants::DDT_INTEGER; $dt->name = 'Integer';
 			$arr[]= $dt;
-			$dt = new stdClass(); $dt->id = 2; $dt->name = 'Date';
+			$dt = new stdClass(); $dt->id = Constants::DDT_DATE; $dt->name = 'Date';
 			$arr[]= $dt;
-			$dt = new stdClass(); $dt->id = 3; $dt->name = 'Decimal';
+			$dt = new stdClass(); $dt->id = Constants::DDT_DECIMAL; $dt->name = 'Decimal';
 			$arr[]= $dt;
-			$dt = new stdClass(); $dt->id = 4; $dt->name = 'Yes/No';
+			$dt = new stdClass(); $dt->id = Constants::DDT_YESNO; $dt->name = 'Yes/No';
 			$arr[]= $dt;
-			$dt = new stdClass(); $dt->id = 5; $dt->name = 'Choice';
+			$dt = new stdClass(); $dt->id = Constants::DDT_CHOICE; $dt->name = 'Choice';
 			$arr[]= $dt;									
 			self::$datatypes = json_encode($arr);			
 		}

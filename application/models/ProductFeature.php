@@ -2,7 +2,7 @@
 
 class ProductFeature extends BaseModel {
 	
-	public static $table = 'flk_product_feature';
+	public static $table = Constants::TABLE_PRODUCT_FEATURE;
 	public static $timestamps = false;
 }
 

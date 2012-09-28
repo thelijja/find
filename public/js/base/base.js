@@ -240,12 +240,14 @@
             } else {
               this.$('#' + model.id).replaceWith(rowView.render().el);
             }
-            return view.hideModal();
+            view.hideModal();
           } else {
             vel = view.$el;
             vel.replaceWith(rowView.render().el);
-            return vel.attr('id', model.id);
+            vel.attr('id', model.id);
           }
+          that.collection.remove(model);
+          return that.collection.add(model);
         },
         error: function(rmodel, errors) {
           return that.showError(errors);

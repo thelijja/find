@@ -154,7 +154,8 @@ class SearchResultTableView extends BaseView
 					# Create new row view with model				
 					vel.replaceWith rowView.render().el		# Update the same row with new view
 					vel.attr 'id', model.id					# Also with id
-				
+				that.collection.remove model
+				that.collection.add model
 			error: (rmodel, errors) ->
 				that.showError(errors) 
 		

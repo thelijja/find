@@ -49,7 +49,7 @@
 	</script>
 	
 	<script type="text/template" id="tpl-category-results">
-		<table class="table table-bordered table-striped table-hover">
+		<table class="table table-bordered table-striped table-hover table-condensed">
 			<thead>
 				<tr>
 					<th class="id-col span1">#</th>
@@ -104,7 +104,7 @@
 	</script>	
 	
 	<script type="text/template" id="tpl-featurecat-results">
-		<table class="table table-bordered table-striped table-hover">
+		<table class="table table-bordered table-striped table-hover table-condensed">
 			<thead>
 				<tr>
 					<th class="id-col span1">#</th>
@@ -152,7 +152,7 @@
 	</script>	
 	
 	<script type="text/template" id="tpl-feature-results">
-		<table class="table table-bordered table-striped table-hover">
+		<table class="table table-bordered table-striped table-hover table-condensed">
 			<thead>
 				<tr>
 					<th class="id-col span1">#</th>

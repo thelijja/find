@@ -230,9 +230,10 @@ class ProductCategoryNodeView extends app.BaseView
 		if @model.has('children') and @model.get('children').length > 0
 			inputEl = @make("input", {"type":"checkbox", "id":@model.id})
 			labelEl = @make("label", {"for":@model.id, "class":"parent"}, @model.get('name'))
-			#labelEl = @make("a", {"href":'#'+@model.id}, @model.get('name'))
+			btnEl = @make("button", {"class":"btn btn-mini btn-info"}, @make("i", {"class":"icon-th-list icon-white"}))			
 			@$el.append inputEl
 			@$el.append labelEl
+			@$el.append btnEl
 			children = new app.ProductCategoryTree @model.get('children')
 			@$el.append (new app.ProductCategoryTreeView collection:children).render().el 
 		else

@@ -1,3 +1,5 @@
+/* CSS3 Treevew. No JavaScript | by Martin Ivanov */
+
 	.css-treeview ul,
 	.css-treeview li
 	{
@@ -41,8 +43,9 @@
 		display: none;
 	}
 
-	.css-treeview label,
-	.css-treeview .parent,
+	/*.css-treeview label,
+	.css-treeview .parent,*/
+	.css-treeview i,
 	.css-treeview .parent::before
 	{
 		cursor: pointer;
@@ -113,4 +116,9 @@
 				padding: 0;
 			}
 		}
+	}
+	
+	.css-treeview i {
+		margin-left: 5px;
+		margin-top:4px;
 	}

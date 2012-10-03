@@ -228,17 +228,19 @@ class ProductCategoryNodeView extends app.BaseView
 	tagName:'li'
 	render: ->
 		if @model.has('children') and @model.get('children').length > 0
-			inputEl = @make("input", {"type":"checkbox", "id":@model.id})
+			inputEl = @make("input", {"type":"checkbox"})
 			labelEl = @make("label", {"for":@model.id, "class":"parent"}, @model.get('name'))
-			btnEl = @make("button", {"class":"btn btn-mini btn-info"}, @make("i", {"class":"icon-th-list icon-white"}))			
+			$(labelEl).append @make("i", {"class":"icon-th-list"})			
+			#btnEl = @make("i", {"class":"icon-th-list"})			
 			@$el.append inputEl
 			@$el.append labelEl
-			@$el.append btnEl
+			#@$el.append btnEl
 			children = new app.ProductCategoryTree @model.get('children')
 			@$el.append (new app.ProductCategoryTreeView collection:children).render().el 
 		else
 			#aEl = @make("a", {"href":'#'+@model.id}, @model.get('name'))
 			aEl = @make("label", {"for":@model.id}, @model.get('name'))
+			$(aEl).append @make("i", {"class":"icon-th-list"})	
 			@$el.append aEl
 		@
 			
@@ -257,7 +259,7 @@ class ProductCategoryTreeView extends app.BaseView
 class ProductCategoryAreaView extends app.BaseView
 	el:'div.left-area'
 	events:
-		'click label': 'categorySelected'
+		'click i': 'categorySelected'
 	initialize: ->
 		@collection.on 'reset', @render, @	
 				
@@ -267,7 +269,7 @@ class ProductCategoryAreaView extends app.BaseView
 		@$el.append @make("div", {"class":"css-treeview"}, treeBody)	
 		
 	categorySelected: (e) ->
-		console.log e
+		console.log $(e.target).parent().attr('for')
 
 class ProductFeaturesView extends app.SearchResultTableView
 

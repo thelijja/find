@@ -494,13 +494,15 @@
       var aEl, children, inputEl, labelEl;
       if (this.model.has('children') && this.model.get('children').length > 0) {
         inputEl = this.make("input", {
-          "type": "checkbox",
-          "id": this.model.id
+          "type": "checkbox"
         });
         labelEl = this.make("label", {
           "for": this.model.id,
           "class": "parent"
         }, this.model.get('name'));
+        $(labelEl).append(this.make("i", {
+          "class": "icon-th-list"
+        }));
         this.$el.append(inputEl);
         this.$el.append(labelEl);
         children = new app.ProductCategoryTree(this.model.get('children'));
@@ -511,6 +513,9 @@
         aEl = this.make("label", {
           "for": this.model.id
         }, this.model.get('name'));
+        $(aEl).append(this.make("i", {
+          "class": "icon-th-list"
+        }));
         this.$el.append(aEl);
       }
       return this;
@@ -556,7 +561,7 @@
     ProductCategoryAreaView.prototype.el = 'div.left-area';
 
     ProductCategoryAreaView.prototype.events = {
-      'click label': 'categorySelected'
+      'click i': 'categorySelected'
     };
 
     ProductCategoryAreaView.prototype.initialize = function() {
@@ -575,7 +580,7 @@
     };
 
     ProductCategoryAreaView.prototype.categorySelected = function(e) {
-      return console.log(e);
+      return console.log($(e.target).parent().attr('for'));
     };
 
     return ProductCategoryAreaView;

@@ -10,6 +10,7 @@
 	{{ HTML::style('css/bootstrap-responsive.min.css') }}
 	<!-- application styles -->
 	{{ HTML::style('css/base/style.css') }}
+	{{ HTML::style('css/base/tree.css') }}
 	{{ HTML::style('css/admin/admin.css') }}
 	@yield_section
 </head>

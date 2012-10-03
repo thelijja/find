@@ -19,8 +19,13 @@ class ProductFeatures extends app.BaseCollection
 	model:app.ProductFeature
 	url:'api/admin/features'	
 
+# ## Collections related to product category tree
+class ProductCategoryTree extends app.BaseCollection
+	model:app.ProductCategoryTreeNode
+	url:'api/lookup/categorytree'
 
 @app = window.app ? {}
 @app.ProductCategories = ProductCategories
 @app.FeatureCategories = FeatureCategories
 @app.ProductFeatures = ProductFeatures
+@app.ProductCategoryTree = ProductCategoryTree

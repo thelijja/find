@@ -143,7 +143,7 @@
       SearchCriteriaView.__super__.constructor.apply(this, arguments);
     }
 
-    SearchCriteriaView.prototype.el = '#search-area';
+    SearchCriteriaView.prototype.el = 'div.search-area';
 
     SearchCriteriaView.prototype.events = {
       'click .btn-search': 'search',
@@ -180,7 +180,7 @@
       SearchResultTableView.__super__.constructor.apply(this, arguments);
     }
 
-    SearchResultTableView.prototype.el = '#result-area';
+    SearchResultTableView.prototype.el = 'div.result-area';
 
     SearchResultTableView.prototype.events = {
       'click #btn-add': 'create'

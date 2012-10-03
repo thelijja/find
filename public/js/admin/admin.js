@@ -21,18 +21,26 @@
     };
 
     AdminRouter.prototype.showCategories = function() {
+      this.showLayout('default');
       if (this.currentView != null) this.currentView.close();
       return this.currentView = new app.ProductCategoryView;
     };
 
     AdminRouter.prototype.showFeatureCats = function() {
+      this.showLayout('default');
       if (this.currentView != null) this.currentView.close();
       return this.currentView = new app.FeatureCategoryView;
     };
 
     AdminRouter.prototype.showFeatures = function() {
+      this.showLayout('vertical');
       if (this.currentView != null) this.currentView.close();
-      return this.currentView = new app.ProductFeatureView;
+      return this.currentView = new app.FeatureMainView;
+    };
+
+    AdminRouter.prototype.showLayout = function(prefix) {
+      $('div[id$=layout]').hide();
+      return $('div#' + prefix + '-layout').show();
     };
 
     return AdminRouter;

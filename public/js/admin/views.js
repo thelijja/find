@@ -1,5 +1,5 @@
 (function() {
-  var CategoryResultView, CategorySearchView, FeatureCategoryEditView, FeatureCategoryResultView, FeatureCategoryRowView, FeatureCategorySearchView, FeatureCategoryView, ProductCategoryEditView, ProductCategoryRowView, ProductCategoryView, ProductFeatureEditView, ProductFeatureResultView, ProductFeatureRowView, ProductFeatureSearchView, ProductFeatureView, _ref,
+  var CategoryResultView, CategorySearchView, FeatureCategoryEditView, FeatureCategoryResultView, FeatureCategoryRowView, FeatureCategorySearchView, FeatureCategoryView, FeatureMainView, ProductCategoryAreaView, ProductCategoryEditView, ProductCategoryNodeView, ProductCategoryRowView, ProductCategoryTreeView, ProductCategoryView, ProductFeatureEditView, ProductFeatureResultView, ProductFeatureRowView, ProductFeatureSearchView, ProductFeatureView, ProductFeaturesView, _ref,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
@@ -480,6 +480,140 @@
 
   })(app.TableItemDisplayView);
 
+  ProductCategoryNodeView = (function(_super) {
+
+    __extends(ProductCategoryNodeView, _super);
+
+    function ProductCategoryNodeView() {
+      ProductCategoryNodeView.__super__.constructor.apply(this, arguments);
+    }
+
+    ProductCategoryNodeView.prototype.tagName = 'li';
+
+    ProductCategoryNodeView.prototype.render = function() {
+      var aEl, children, inputEl, labelEl;
+      if (this.model.has('children') && this.model.get('children').length > 0) {
+        inputEl = this.make("input", {
+          "type": "checkbox",
+          "id": this.model.id
+        });
+        labelEl = this.make("label", {
+          "for": this.model.id,
+          "class": "parent"
+        }, this.model.get('name'));
+        this.$el.append(inputEl);
+        this.$el.append(labelEl);
+        children = new app.ProductCategoryTree(this.model.get('children'));
+        this.$el.append((new app.ProductCategoryTreeView({
+          collection: children
+        })).render().el);
+      } else {
+        aEl = this.make("label", {
+          "for": this.model.id
+        }, this.model.get('name'));
+        this.$el.append(aEl);
+      }
+      return this;
+    };
+
+    return ProductCategoryNodeView;
+
+  })(app.BaseView);
+
+  ProductCategoryTreeView = (function(_super) {
+
+    __extends(ProductCategoryTreeView, _super);
+
+    function ProductCategoryTreeView() {
+      ProductCategoryTreeView.__super__.constructor.apply(this, arguments);
+    }
+
+    ProductCategoryTreeView.prototype.tagName = 'ul';
+
+    ProductCategoryTreeView.prototype.render = function() {
+      var thatEl;
+      thatEl = this.$el;
+      this.collection.each(function(item) {
+        return thatEl.append((new app.ProductCategoryNodeView({
+          model: item
+        })).render().el);
+      });
+      return this;
+    };
+
+    return ProductCategoryTreeView;
+
+  })(app.BaseView);
+
+  ProductCategoryAreaView = (function(_super) {
+
+    __extends(ProductCategoryAreaView, _super);
+
+    function ProductCategoryAreaView() {
+      ProductCategoryAreaView.__super__.constructor.apply(this, arguments);
+    }
+
+    ProductCategoryAreaView.prototype.el = 'div.left-area';
+
+    ProductCategoryAreaView.prototype.events = {
+      'click label': 'categorySelected'
+    };
+
+    ProductCategoryAreaView.prototype.initialize = function() {
+      return this.collection.on('reset', this.render, this);
+    };
+
+    ProductCategoryAreaView.prototype.render = function() {
+      var treeBody;
+      this.$el.empty();
+      treeBody = (new app.ProductCategoryTreeView({
+        collection: this.collection
+      })).render().el;
+      return this.$el.append(this.make("div", {
+        "class": "css-treeview"
+      }, treeBody));
+    };
+
+    ProductCategoryAreaView.prototype.categorySelected = function(e) {
+      return console.log(e);
+    };
+
+    return ProductCategoryAreaView;
+
+  })(app.BaseView);
+
+  ProductFeaturesView = (function(_super) {
+
+    __extends(ProductFeaturesView, _super);
+
+    function ProductFeaturesView() {
+      ProductFeaturesView.__super__.constructor.apply(this, arguments);
+    }
+
+    return ProductFeaturesView;
+
+  })(app.SearchResultTableView);
+
+  FeatureMainView = (function(_super) {
+
+    __extends(FeatureMainView, _super);
+
+    function FeatureMainView() {
+      FeatureMainView.__super__.constructor.apply(this, arguments);
+    }
+
+    FeatureMainView.prototype.initialize = function() {
+      this.productCategories = new app.ProductCategoryTree;
+      this.productCategoryView = new app.ProductCategoryAreaView({
+        collection: this.productCategories
+      });
+      return this.productCategories.fetch();
+    };
+
+    return FeatureMainView;
+
+  })(app.BaseView);
+
   this.app = (_ref = window.app) != null ? _ref : {};
 
   this.app.ProductCategoryView = ProductCategoryView;
@@ -511,5 +645,13 @@
   this.app.ProductFeatureEditView = ProductFeatureEditView;
 
   this.app.ProductCategoryRowView = ProductCategoryRowView;
+
+  this.app.FeatureMainView = FeatureMainView;
+
+  this.app.ProductCategoryAreaView = ProductCategoryAreaView;
+
+  this.app.ProductCategoryTreeView = ProductCategoryTreeView;
+
+  this.app.ProductCategoryNodeView = ProductCategoryNodeView;
 
 }).call(this);

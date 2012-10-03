@@ -58,8 +58,7 @@ class Lookup {
 				}					
 																
 			}
-			
-			
+						
 		}				
 			
 		return $tree;						

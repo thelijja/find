@@ -221,6 +221,68 @@ class ProductFeatureRowView extends app.TableItemDisplayView
 		pc = @options.productcats.get(@model.get('product_category_id')) if @model.get('product_category_id')?		
 		@model.set productCategory: pc.get('name') if pc?
 
+
+# ========================================================================================================================
+# # Begin PRODUCT FEATURE Views
+class ProductCategoryNodeView extends app.BaseView
+	tagName:'li'
+	render: ->
+		if @model.has('children') and @model.get('children').length > 0
+			inputEl = @make("input", {"type":"checkbox", "id":@model.id})
+			labelEl = @make("label", {"for":@model.id, "class":"parent"}, @model.get('name'))
+			#labelEl = @make("a", {"href":'#'+@model.id}, @model.get('name'))
+			@$el.append inputEl
+			@$el.append labelEl
+			children = new app.ProductCategoryTree @model.get('children')
+			@$el.append (new app.ProductCategoryTreeView collection:children).render().el 
+		else
+			#aEl = @make("a", {"href":'#'+@model.id}, @model.get('name'))
+			aEl = @make("label", {"for":@model.id}, @model.get('name'))
+			@$el.append aEl
+		@
+			
+
+# ## Product Category Tree View
+class ProductCategoryTreeView extends app.BaseView
+	tagName:'ul'
+				
+	render: ->
+		thatEl = @$el
+		@collection.each (item) ->
+			thatEl.append (new app.ProductCategoryNodeView model:item).render().el
+		@
+
+# ## Product Category Tree Area		
+class ProductCategoryAreaView extends app.BaseView
+	el:'div.left-area'
+	events:
+		'click label': 'categorySelected'
+	initialize: ->
+		@collection.on 'reset', @render, @	
+				
+	render: ->
+		@$el.empty()
+		treeBody = (new app.ProductCategoryTreeView collection:@collection).render().el
+		@$el.append @make("div", {"class":"css-treeview"}, treeBody)	
+		
+	categorySelected: (e) ->
+		console.log e
+
+class ProductFeaturesView extends app.SearchResultTableView
+
+# ## Product Feature Main View
+class FeatureMainView extends app.BaseView
+	initialize: ->
+		@productCategories = new app.ProductCategoryTree
+		@productCategoryView = new app.ProductCategoryAreaView collection:@productCategories
+		@productCategories.fetch()
+
+
+
+
+
+
+
 # ========================================================================================================================
 @app = window.app ? {}
 @app.ProductCategoryView = ProductCategoryView
@@ -240,3 +302,8 @@ class ProductFeatureRowView extends app.TableItemDisplayView
 @app.ProductFeatureResultView = ProductFeatureResultView
 @app.ProductFeatureEditView = ProductFeatureEditView
 @app.ProductCategoryRowView = ProductCategoryRowView
+
+@app.FeatureMainView = FeatureMainView
+@app.ProductCategoryAreaView = ProductCategoryAreaView
+@app.ProductCategoryTreeView = ProductCategoryTreeView
+@app.ProductCategoryNodeView = ProductCategoryNodeView

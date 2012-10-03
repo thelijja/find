@@ -1,5 +1,5 @@
 (function() {
-  var FeatureCategories, ProductCategories, ProductFeatures, _ref,
+  var FeatureCategories, ProductCategories, ProductCategoryTree, ProductFeatures, _ref,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
@@ -57,6 +57,22 @@
 
   })(app.BaseCollection);
 
+  ProductCategoryTree = (function(_super) {
+
+    __extends(ProductCategoryTree, _super);
+
+    function ProductCategoryTree() {
+      ProductCategoryTree.__super__.constructor.apply(this, arguments);
+    }
+
+    ProductCategoryTree.prototype.model = app.ProductCategoryTreeNode;
+
+    ProductCategoryTree.prototype.url = 'api/lookup/categorytree';
+
+    return ProductCategoryTree;
+
+  })(app.BaseCollection);
+
   this.app = (_ref = window.app) != null ? _ref : {};
 
   this.app.ProductCategories = ProductCategories;
@@ -64,5 +80,7 @@
   this.app.FeatureCategories = FeatureCategories;
 
   this.app.ProductFeatures = ProductFeatures;
+
+  this.app.ProductCategoryTree = ProductCategoryTree;
 
 }).call(this);

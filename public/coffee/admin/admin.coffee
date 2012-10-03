@@ -8,16 +8,23 @@ class AdminRouter extends app.BaseRouter
 		'features':'showFeatures'
 	
 	showCategories: ->
+		@showLayout 'default'
 		@currentView.close() if @currentView?
 		@currentView = new app.ProductCategoryView
 		
 	showFeatureCats: ->
+		@showLayout 'default'
 		@currentView.close() if @currentView?
 		@currentView = new app.FeatureCategoryView 
 		
 	showFeatures:->
+		@showLayout 'vertical'
 		@currentView.close() if @currentView?
-		@currentView = new app.ProductFeatureView 
+		@currentView = new app.FeatureMainView
+		
+	showLayout: (prefix) ->
+		$('div[id$=layout]').hide()
+		$('div#' + prefix + '-layout').show()
 
 @app.AdminRouter = AdminRouter
 

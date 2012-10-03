@@ -24,6 +24,11 @@ class FeatureSearchModel extends app.BaseModel
 class ProductFeature extends app.BaseModel
 	urlRoot:'api/admin/features'
 	
+# ## Models related to product features (NEW*)
+class ProductCategoryTreeNode extends app.BaseModel
+	urlRoot:'api/lookup/categorytree'
+	
+
 
 @app = window.app ? {}
 @app.ProductCategory = ProductCategory
@@ -32,3 +37,4 @@ class ProductFeature extends app.BaseModel
 @app.FeatureCategorySearchModel = FeatureCategorySearchModel
 @app.FeatureSearchModel = FeatureSearchModel
 @app.ProductFeature = ProductFeature
+@app.ProductCategoryTreeNode = ProductCategoryTreeNode

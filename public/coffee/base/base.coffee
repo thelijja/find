@@ -69,7 +69,7 @@ class LookupApiUrl extends BaseModel
 #
 # searchView = new CategorySearchView model: model, tpl_search:'#tpl_category_search' 
 class SearchCriteriaView extends BaseView
-	el:'#search-area'
+	el:'div.search-area'
 	events:
 		'click .btn-search': 'search'
 		'click .btn-clear': 'clear'
@@ -101,7 +101,7 @@ class SearchCriteriaView extends BaseView
 #    createItemEditView(model) - This should return view represending edit mode of each table row with model data.
 #    createEmptyModel() - This should return appropriate model created.
 class SearchResultTableView extends BaseView
-	el:'#result-area'
+	el:'div.result-area'
 	events:
 		'click #btn-add' : 'create'
 	

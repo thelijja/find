@@ -501,7 +501,7 @@
           "class": "parent"
         }, this.model.get('name'));
         $(labelEl).append(this.make("i", {
-          "class": "icon-th-list"
+          "class": "icon-th-list pull-right"
         }));
         this.$el.append(inputEl);
         this.$el.append(labelEl);
@@ -514,7 +514,7 @@
           "for": this.model.id
         }, this.model.get('name'));
         $(aEl).append(this.make("i", {
-          "class": "icon-th-list"
+          "class": "icon-th-list pull-right"
         }));
         this.$el.append(aEl);
       }
@@ -580,7 +580,9 @@
     };
 
     ProductCategoryAreaView.prototype.categorySelected = function(e) {
-      return console.log($(e.target).parent().attr('for'));
+      var categoryId;
+      categoryId = $(e.target).parent().attr('for');
+      return this.collection.trigger('selected', categoryId);
     };
 
     return ProductCategoryAreaView;
@@ -609,10 +611,15 @@
 
     FeatureMainView.prototype.initialize = function() {
       this.productCategories = new app.ProductCategoryTree;
+      this.productCategories.on('selected', this.selected, this);
       this.productCategoryView = new app.ProductCategoryAreaView({
         collection: this.productCategories
       });
       return this.productCategories.fetch();
+    };
+
+    FeatureMainView.prototype.selected = function(categoryId) {
+      return alert(categoryId);
     };
 
     return FeatureMainView;

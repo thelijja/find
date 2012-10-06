@@ -40,12 +40,12 @@ class Create_Schema {
 	
 	private function dropProductFeatureTable_0033() {
 		
-		Schema::drop('flk_product_feature');
+		Schema::drop('flk_product_category_feature');
 	}
 	
 	private function createProductFeatureTable_0033() {
 		
-		Schema::create('flk_product_feature', function($t) {
+		Schema::create('flk_product_category_feature', function($t) {
 			$t->integer('product_category_id')->unsigned();
 			$t->integer('feature_id')->unsigned();
 			$t->boolean('enabled')->default(1);
@@ -78,7 +78,7 @@ class Create_Schema {
 	}
 
 	private function createProductFeatureSet_0070() {
-		Schema::create('flk_product_feature_set', function($t){
+		Schema::create('flk_product_feature', function($t){
 			$t->integer('product_id')->unsigned();
 			$t->integer('feature_id')->unsigned();
 			$t->string('val_str',100)->nullable();
@@ -98,7 +98,7 @@ class Create_Schema {
 	}
 
 	private function dropProductFeatureSet_0070() {
-		Schema::drop('flk_product_feature_set');
+		Schema::drop('flk_product_feature');
 	}
 
 	private function createProductContactTable_0060() {

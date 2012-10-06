@@ -105,25 +105,30 @@ class Api_Admin_Controller extends Base_Controller {
 	/*
 	 * Product Features REST API
 	 */
-	public function get_feature($id = -1) {
-		if (is_null($id) || $id = -1) {
-			$feature = ProductFeature::all();
-			return eloquent_to_json($feature);
-		}		
+	public function get_feature($productCategoryId = -1) {
+		if (is_null($productCategoryId) || $productCategoryId = -1) {
+			$features = Feature::all();
+			return eloquent_to_json($features);
+		} else {
+			$features = ProductCategory::find($productCategoryId)->features();
+			return eloquent_to_json($features);
+		}
 	}
 	
 	public function post_feature() {
 		$feature = Input::json();
-		
+		$productCategory = ProductCategory::find($feature->product_category_id);
+					
 		//TODO: Do some validation here before saving..
-		$dbFeature = new ProductFeature();
+		$dbFeature = new Feature();
 		$dbFeature->name = $feature->name;
 		$dbFeature->data_type = $feature->data_type;
 		$dbFeature->importance = $feature->importance;
 		$dbFeature->description = empty($feature->description) ? null: $feature->description;
 		$dbFeature->feature_category_id = $feature->feature_category_id;
-		$dbFeature->product_category_id = $feature->product_category_id;
-		$dbFeature->save();
+		
+		$productCategory->features()->insert($dbFeature);
+		
 		return $dbFeature->toJson();		
 	}
 	

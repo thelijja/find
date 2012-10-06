@@ -230,17 +230,14 @@ class ProductCategoryNodeView extends app.BaseView
 		if @model.has('children') and @model.get('children').length > 0
 			inputEl = @make("input", {"type":"checkbox"})
 			labelEl = @make("label", {"for":@model.id, "class":"parent"}, @model.get('name'))
-			$(labelEl).append @make("i", {"class":"icon-th-list"})			
-			#btnEl = @make("i", {"class":"icon-th-list"})			
+			$(labelEl).append @make("i", {"class":"icon-th-list pull-right"})			
 			@$el.append inputEl
 			@$el.append labelEl
-			#@$el.append btnEl
 			children = new app.ProductCategoryTree @model.get('children')
 			@$el.append (new app.ProductCategoryTreeView collection:children).render().el 
 		else
-			#aEl = @make("a", {"href":'#'+@model.id}, @model.get('name'))
 			aEl = @make("label", {"for":@model.id}, @model.get('name'))
-			$(aEl).append @make("i", {"class":"icon-th-list"})	
+			$(aEl).append @make("i", {"class":"icon-th-list pull-right"})	
 			@$el.append aEl
 		@
 			
@@ -269,7 +266,9 @@ class ProductCategoryAreaView extends app.BaseView
 		@$el.append @make("div", {"class":"css-treeview"}, treeBody)	
 		
 	categorySelected: (e) ->
-		console.log $(e.target).parent().attr('for')
+		categoryId = $(e.target).parent().attr('for')
+		@collection.trigger 'selected', categoryId
+		
 
 class ProductFeaturesView extends app.SearchResultTableView
 
@@ -277,8 +276,12 @@ class ProductFeaturesView extends app.SearchResultTableView
 class FeatureMainView extends app.BaseView
 	initialize: ->
 		@productCategories = new app.ProductCategoryTree
+		@productCategories.on 'selected', @selected, @
 		@productCategoryView = new app.ProductCategoryAreaView collection:@productCategories
 		@productCategories.fetch()
+		
+	selected: (categoryId) ->
+		alert categoryId
 
 
 

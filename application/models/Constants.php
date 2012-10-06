@@ -4,9 +4,10 @@ class Constants {
 	
 	// Define table names...
 	const TABLE_PRODUCT_CATEGORY = "flk_product_category";
-	const TABLE_PRODUCT_FEATURE = "flk_product_feature";
+	const TABLE_PRODUCT_CATEGORY_FEATURE = "flk_product_category_feature";
 	const TABLE_FEATURE_CATEGORY = "flk_feature_category";
 	const TABLE_FEATURE_SELECTION = "flk_product_feature_selection";
+	const TABLE_FEATURE = "flk_feature";
 	
 	// Define feature data types..
 	const DDT_TEXT = 0;

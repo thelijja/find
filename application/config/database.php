@@ -72,7 +72,7 @@ return array(
 			'host'     => 'localhost',
 			'database' => 'find',
 			'username' => 'root',
-			'password' => 'rasika$123',
+			'password' => 'thelma',
 			'charset'  => 'utf8',
 			'prefix'   => '',
 		),

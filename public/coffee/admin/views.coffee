@@ -126,100 +126,6 @@ class FeatureCategoryRowView extends app.TableItemDisplayView
 # # End Feature Category Views
 
 
-# ========================================================================================================================
-# # Begin FEATURE Views
-
-# ## Feature Search View
-class ProductFeatureSearchView extends app.SearchCriteriaView
-
-# ## Feature Result View
-class ProductFeatureResultView extends app.SearchResultTableView
-	createItemDisplayView: (model) ->
-		new ProductFeatureRowView model:model, productcats:@categories, featurecats:@featurecats, datatypes:@datatypes
-	
-	createItemEditView: (model) ->
-		new ProductFeatureEditView model:model, productcats:@categories, featurecats:@featurecats, datatypes:@datatypes
-		
-	createEmptyModel: ->
-		new app.ProductFeature name:'', importance:0
-  
-	initialize: ->
-		super
-		@categories = new app.LookupEntries null, url:app.lookupApiUrl.get('category')
-		@featurecats = new app.LookupEntries null, url:app.lookupApiUrl.get('featurecat')
-		@datatypes = new app.LookupEntries null, url:app.lookupApiUrl.get('datatype')
-		@categories.fetch()
-		@featurecats.fetch()
-		@datatypes.fetch()
-		
-  
-# ## Feature Main View
-class ProductFeatureView extends app.BaseView
-	initialize:->
-		@model = new app.FeatureSearchModel
-		@collection = new app.ProductFeatures		
-		@model.on 'search', @search, @				# When search model trigger 'searh' we need to search and set the collection
-		@model.on 'reset', @reset, @				# WHen search model trigger 'reset', collection will be emptied.
-		@searchView = new app.ProductFeatureSearchView model: @model, template:'#tpl-feature-search'
-		@resultView = new app.ProductFeatureResultView collection: @collection, template:'#tpl-feature-results'
-		
-	renader:->
-	
-	search:->
-		# TODO: Write search logic...
-		@collection.fetch()
-		
-	reset:->
-		@collection.reset []		
-
-	close:->
-		@searchView.close() if @searchView?
-		@resultView.close() if @resultView?	
-  
-
-# ## Feature Item edit view
-class ProductFeatureEditView extends app.TableItemEditView
-	tagName:'div'
-	template: app.BaseView.getTemplate('#tpl-feature-edit')
-	isModalEditView:->								# This is modal edit view, will do the rendering ourself
-		true
-		
-	render:->
-		@$el.empty()
-		@$el.html @template( m: @model.toJSON() )
-		$('#modal-temp-placeholder').html(@el)
-		(new app.LookupDropDownView el:'#feature-prodcategory', collection: @options.productcats).render()
-		(new app.LookupDropDownView el:'#feature-category', collection: @options.featurecats).render()
-		(new app.LookupDropDownView el:'#feature-datatype', collection: @options.datatypes).render()
-		@$("#feature-prodcategory option[value='" + @model.get('product_category_id') + "']").attr('selected', "selected") if @model.has('product_category_id')
-		@$("#feature-category option[value='" + @model.get('feature_category_id') + "']").attr('selected', "selected") if @model.has('feature_category_id')
-		@$("#feature-datatype option[value='" + @model.get('data_type') + "']").attr('selected', "selected") if @model.has('data_type')
-		@$('#modal-feature-edit').modal()
-		@
-
-	hideModal:->
-		@$('#modal-feature-edit').modal('hide')
-
-	readInputs:->
-		@model.set
-			name:@$('#feature-name').val(),
-			data_type:@$('#feature-datatype').val(),
-			importance:@$('#feature-importance').val(),
-			description:@$('#feature-desc').val(),
-			product_category_id:@$('#feature-prodcategory').val()
-			feature_category_id:@$('#feature-category').val()
-		
-		
-# ## Feature Item row view
-class ProductFeatureRowView extends app.TableItemDisplayView
-	template: app.BaseView.getTemplate('#tpl-feature-row')
-	initialize:->
-		dt = @options.datatypes.get(@model.get('data_type')) if @model.get('data_type')?		
-		@model.set dataTypeDesc: dt.get('name') if dt?		
-		fc = @options.featurecats.get(@model.get('feature_category_id')) if @model.get('feature_category_id')?
-		@model.set featureCategory: fc.get('name') if fc?
-		pc = @options.productcats.get(@model.get('product_category_id')) if @model.get('product_category_id')?		
-		@model.set productCategory: pc.get('name') if pc?
 
 
 # ========================================================================================================================
@@ -269,19 +175,98 @@ class ProductCategoryAreaView extends app.BaseView
 		categoryId = $(e.target).parent().attr('for')
 		@collection.trigger 'selected', categoryId
 		
+		
+# ## Feature Item row view
+class ProductFeatureRowView extends app.TableItemDisplayView
+	template: app.BaseView.getTemplate('#tpl-feature-row')
+	initialize:->
+		dt = @options.datatypes.get(@model.get('data_type')) if @model.get('data_type')?		
+		@model.set dataTypeDesc: dt.get('name') if dt?		
+		fc = @options.featurecats.get(@model.get('feature_category_id')) if @model.get('feature_category_id')?
+		@model.set featureCategory: fc.get('name') if fc?
 
-class ProductFeaturesView extends app.SearchResultTableView
+
+# ## Feature Item edit view
+class ProductFeatureEditView extends app.TableItemEditView
+	tagName:'div'
+	template: app.BaseView.getTemplate('#tpl-feature-edit')
+	isModalEditView:->								# This is modal edit view, will do the rendering ourself
+		true	
+		
+	render:->
+		@$el.empty()
+		@$el.html @template( m: @model.toJSON() )
+		$('#modal-temp-placeholder').html(@el)
+		#(new app.LookupDropDownView el:'#feature-prodcategory', collection: @options.productcats).render()
+		(new app.LookupDropDownView el:'#feature-category', collection: @options.featurecats).render()
+		(new app.LookupDropDownView el:'#feature-datatype', collection: @options.datatypes).render()
+		#@$("#feature-prodcategory option[value='" + @model.get('product_category_id') + "']").attr('selected', "selected") if @model.has('product_category_id')
+		@$("#feature-category option[value='" + @model.get('feature_category_id') + "']").attr('selected', "selected") if @model.has('feature_category_id')
+		@$("#feature-datatype option[value='" + @model.get('data_type') + "']").attr('selected', "selected") if @model.has('data_type')
+		@$('#modal-feature-edit').modal()
+		@
+
+	hideModal:->
+		@$('#modal-feature-edit').modal('hide')
+
+	readInputs:->
+		@model.set
+			name:@$('#feature-name').val(),
+			data_type:@$('#feature-datatype').val(),
+			importance:@$('#feature-importance').val(),
+			description:@$('#feature-desc').val(),
+			#product_category_id:@$('#feature-prodcategory').val()
+			feature_category_id:@$('#feature-category').val()
+
+
+# ## Feature Result View
+class ProductFeatureResultView extends app.SearchResultTableView
+	createItemDisplayView: (model) ->
+		new ProductFeatureRowView model:model, productcats:@categories, featurecats:@featurecats, datatypes:@datatypes
+	
+	createItemEditView: (model) ->
+		new ProductFeatureEditView model:model, productcats:@categories, featurecats:@featurecats, datatypes:@datatypes
+		
+	createEmptyModel: ->
+		new app.ProductFeature name:'', importance:0, product_category_id: @productCategoryId
+  
+	initialize: ->
+		super
+		@categories = new app.LookupEntries null, url:app.lookupApiUrl.get('category')
+		@featurecats = new app.LookupEntries null, url:app.lookupApiUrl.get('featurecat')
+		@datatypes = new app.LookupEntries null, url:app.lookupApiUrl.get('datatype')
+		@categories.fetch()
+		@featurecats.fetch()
+		@datatypes.fetch()
+		
+	render: ->
+		super
+		@$('h3').html @categories.get(@productCategoryId).get('name') if @productCategoryId > 0
+		
+	productCategoryId : -1
+
 
 # ## Product Feature Main View
 class FeatureMainView extends app.BaseView
 	initialize: ->
 		@productCategories = new app.ProductCategoryTree
 		@productCategories.on 'selected', @selected, @
+		@features = new app.ProductFeatures		
 		@productCategoryView = new app.ProductCategoryAreaView collection:@productCategories
+		@resultView = new app.ProductFeatureResultView el:'div.right-area', collection: @features, template:'#tpl-feature-results'
 		@productCategories.fetch()
 		
 	selected: (categoryId) ->
-		alert categoryId
+		that = @
+		$.ajax
+			url: that.features.url + '/' + categoryId
+			dataType: 'json'
+			success: (resp) ->
+				that.resultView.productCategoryId = categoryId
+				that.features.reset resp
+	close:->
+		@productCategoryView.close() if @productCategoryView?
+		@resultView.close() if @resultView?				
 
 
 
@@ -303,13 +288,10 @@ class FeatureMainView extends app.BaseView
 @app.FeatureCategoryEditView = FeatureCategoryEditView
 @app.FeatureCategoryRowView = FeatureCategoryRowView
 
-@app.ProductFeatureView = ProductFeatureView
-@app.ProductFeatureSearchView = ProductFeatureSearchView
-@app.ProductFeatureResultView = ProductFeatureResultView
-@app.ProductFeatureEditView = ProductFeatureEditView
-@app.ProductCategoryRowView = ProductCategoryRowView
-
 @app.FeatureMainView = FeatureMainView
 @app.ProductCategoryAreaView = ProductCategoryAreaView
 @app.ProductCategoryTreeView = ProductCategoryTreeView
 @app.ProductCategoryNodeView = ProductCategoryNodeView
+@app.ProductFeatureResultView = ProductFeatureResultView
+@app.ProductFeatureEditView = ProductFeatureEditView
+@app.ProductCategoryRowView = ProductCategoryRowView

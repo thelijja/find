@@ -8,8 +8,9 @@ class Api_Admin_Controller extends Base_Controller {
 	 * Product Category REST API
 	 */ 
 	public function get_category($id = null) {
-		if ($id = null) {			
-			$cats = ProductCategory::all();	
+		
+		if ($id == null) {			
+			$cats = ProductCategory::all();			
 			return eloquent_to_json($cats);
 		}				
 	}
@@ -150,14 +151,29 @@ class Api_Admin_Controller extends Base_Controller {
 	public function put_feature() {
 		$feature = Input::json();
 		
-		// TODO:................
+		$dbFeature = Feature::find($feature->id);
+		if (!is_null($dbFeature)) {
+			$dbFeature->name = $feature->name;
+			$dbFeature->data_type = $feature->data_type;
+			$dbFeature->importance = $feature->importance;
+			$dbFeature->description = $feature->description;
+			$dbFeature->feature_category_id = $feature->feature_category_id;
+			$dbFeature->save();
+			$propArray = $dbFeature->to_array();
+			$propArray['product_category_id'] = $feature->product_category_id;
+			$propArray['feature_id'] = $feature->feature_id;
+			$propArray['enabled'] = $feature->enabled;
+			return json_encode($propArray);
+		}
+		else {
+			return $this->post_featureCategory();
+		}		
+		
 	}
 	
 	public function delete_feature($id) {
-		//$dbFeature = ProductFeature::find($id);
-		//$dbFeature->delete();
-		
-		// TODO:................
+		$dbFeature = Feature::find($id);
+		$dbFeature->delete();		
 	}
 }
 

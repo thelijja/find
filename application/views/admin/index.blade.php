@@ -34,8 +34,7 @@
 			</div>
 			<div class="row-fluid result-area">
 				<div></div>
-			</div>
-			<div id="modal-temp-placeholder"></div>		<!-- Place holder to store modal views -->
+			</div>			
 		</div>
 		
 		<div id="vertical-layout" class="hide">

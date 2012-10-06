@@ -50,8 +50,8 @@ class Create_Schema {
 			$t->integer('feature_id')->unsigned();
 			$t->boolean('enabled')->default(1);
 			
-			$t->foreign('feature_id')->references('id')->on('flk_feature');
-			$t->foreign('product_category_id')->references('id')->on('flk_product_category');
+			$t->foreign('feature_id')->references('id')->on('flk_feature')->on_delete('cascade');
+			$t->foreign('product_category_id')->references('id')->on('flk_product_category')->on_delete('cascade');
 			
 			$t->primary(array('product_category_id', 'feature_id'));
 		});

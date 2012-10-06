@@ -6,7 +6,7 @@ class Db_Task {
 	
 		echo 'Truncating tables...', PHP_EOL;
 		DB::query('DELETE FROM '. Constants::TABLE_FEATURE_SELECTION );
-		DB::query('DELETE FROM '. Constants::TABLE_PRODUCT_FEATURE );
+		DB::query('DELETE FROM '. Constants::TABLE_FEATURE );
 		DB::query('DELETE FROM '. Constants::TABLE_FEATURE_CATEGORY );
 		DB::query('DELETE FROM '. Constants::TABLE_PRODUCT_CATEGORY );
 		

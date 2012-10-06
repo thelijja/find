@@ -7,6 +7,10 @@
 	</script>	
 	
 	<script type="text/template" id="tpl-feature-results">
+		<div class="row-fluid">
+			<h3>Product Category</h3>
+		</div>
+		<div class="row-fluid">
 		<table class="table table-bordered table-striped table-hover table-condensed">
 			<thead>
 				<tr>
@@ -14,7 +18,6 @@
 					<th class="span3">Name</th>
 					<th class="span1">Data type</th>
 					<th class="span1">Importance</th>
-					<th class="span2">Product Category</th>
 					<th class="span2">Feature Category</th>
 					<th>Description</th>
 					<th class="tc-tool"><div class="pull-right"><a id='btn-add' class="btn btn-primary" rel="tooltip" title="Add new"><i class="icon-plus icon-white"></i></a></div></th>
@@ -22,7 +25,8 @@
 			<thead>
 			<tbody></tbody>
 		</table>
-						
+		</div>
+		<div id="modal-temp-placeholder"></div>		<!-- Place holder to store modal views -->
 	</script>
 		
 	<script type="text/template" id="tpl-feature-edit">
@@ -52,6 +56,7 @@
 							<input type="text" class="input-small" id="feature-importance" value="<%= m.importance %>">
 						</div>
 					</div>
+					<!--
 					<div class="control-group">
 						<label class="control-label" for="feature-prodcategory">Product Category</label>
 						<div class="controls">
@@ -59,13 +64,15 @@
 							</select>
 						</div>
 					</div>
+					-->
 					<div class="control-group">
 						<label class="control-label" for="feature-category">Product Category</label>
 						<div class="controls">
 							<select id="feature-category">
 							</select>
 						</div>
-					</div>						
+					</div>
+					
 					<div class="control-group">
 						<label class="control-label" for="feature-desc">Description</label>
 						<div class="controls">
@@ -86,7 +93,6 @@
 		<td class="span3"><%= m.name %></td>
 		<td class="span1"><%= m.dataTypeDesc %></td>
 		<td class="span1"><%= m.importance %></td>
-		<td class="span2"><% _.isUndefined(m.productCategory)? print(''): print(m.productCategory) %></td>
 		<td class="span2"><% _.isUndefined(m.featureCategory)? print(''): print(m.featureCategory) %></td>
 		<td ><% _.isUndefined(m.description) || m.description == null? print(''): print( m.description.substring(0,10) + '...' ) %></td>
 		<td class="tc-tool">

@@ -1,5 +1,5 @@
 (function() {
-  var CategoryResultView, CategorySearchView, FeatureCategoryEditView, FeatureCategoryResultView, FeatureCategoryRowView, FeatureCategorySearchView, FeatureCategoryView, FeatureMainView, ProductCategoryAreaView, ProductCategoryEditView, ProductCategoryNodeView, ProductCategoryRowView, ProductCategoryTreeView, ProductCategoryView, ProductFeatureEditView, ProductFeatureResultView, ProductFeatureRowView, ProductFeatureSearchView, ProductFeatureView, ProductFeaturesView, _ref,
+  var CategoryResultView, CategorySearchView, FeatureCategoryEditView, FeatureCategoryResultView, FeatureCategoryRowView, FeatureCategorySearchView, FeatureCategoryView, FeatureMainView, ProductCategoryAreaView, ProductCategoryEditView, ProductCategoryNodeView, ProductCategoryRowView, ProductCategoryTreeView, ProductCategoryView, ProductFeatureEditView, ProductFeatureResultView, ProductFeatureRowView, _ref,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
@@ -265,221 +265,6 @@
 
   })(app.TableItemDisplayView);
 
-  ProductFeatureSearchView = (function(_super) {
-
-    __extends(ProductFeatureSearchView, _super);
-
-    function ProductFeatureSearchView() {
-      ProductFeatureSearchView.__super__.constructor.apply(this, arguments);
-    }
-
-    return ProductFeatureSearchView;
-
-  })(app.SearchCriteriaView);
-
-  ProductFeatureResultView = (function(_super) {
-
-    __extends(ProductFeatureResultView, _super);
-
-    function ProductFeatureResultView() {
-      ProductFeatureResultView.__super__.constructor.apply(this, arguments);
-    }
-
-    ProductFeatureResultView.prototype.createItemDisplayView = function(model) {
-      return new ProductFeatureRowView({
-        model: model,
-        productcats: this.categories,
-        featurecats: this.featurecats,
-        datatypes: this.datatypes
-      });
-    };
-
-    ProductFeatureResultView.prototype.createItemEditView = function(model) {
-      return new ProductFeatureEditView({
-        model: model,
-        productcats: this.categories,
-        featurecats: this.featurecats,
-        datatypes: this.datatypes
-      });
-    };
-
-    ProductFeatureResultView.prototype.createEmptyModel = function() {
-      return new app.ProductFeature({
-        name: '',
-        importance: 0
-      });
-    };
-
-    ProductFeatureResultView.prototype.initialize = function() {
-      ProductFeatureResultView.__super__.initialize.apply(this, arguments);
-      this.categories = new app.LookupEntries(null, {
-        url: app.lookupApiUrl.get('category')
-      });
-      this.featurecats = new app.LookupEntries(null, {
-        url: app.lookupApiUrl.get('featurecat')
-      });
-      this.datatypes = new app.LookupEntries(null, {
-        url: app.lookupApiUrl.get('datatype')
-      });
-      this.categories.fetch();
-      this.featurecats.fetch();
-      return this.datatypes.fetch();
-    };
-
-    return ProductFeatureResultView;
-
-  })(app.SearchResultTableView);
-
-  ProductFeatureView = (function(_super) {
-
-    __extends(ProductFeatureView, _super);
-
-    function ProductFeatureView() {
-      ProductFeatureView.__super__.constructor.apply(this, arguments);
-    }
-
-    ProductFeatureView.prototype.initialize = function() {
-      this.model = new app.FeatureSearchModel;
-      this.collection = new app.ProductFeatures;
-      this.model.on('search', this.search, this);
-      this.model.on('reset', this.reset, this);
-      this.searchView = new app.ProductFeatureSearchView({
-        model: this.model,
-        template: '#tpl-feature-search'
-      });
-      return this.resultView = new app.ProductFeatureResultView({
-        collection: this.collection,
-        template: '#tpl-feature-results'
-      });
-    };
-
-    ProductFeatureView.prototype.renader = function() {};
-
-    ProductFeatureView.prototype.search = function() {
-      return this.collection.fetch();
-    };
-
-    ProductFeatureView.prototype.reset = function() {
-      return this.collection.reset([]);
-    };
-
-    ProductFeatureView.prototype.close = function() {
-      if (this.searchView != null) this.searchView.close();
-      if (this.resultView != null) return this.resultView.close();
-    };
-
-    return ProductFeatureView;
-
-  })(app.BaseView);
-
-  ProductFeatureEditView = (function(_super) {
-
-    __extends(ProductFeatureEditView, _super);
-
-    function ProductFeatureEditView() {
-      ProductFeatureEditView.__super__.constructor.apply(this, arguments);
-    }
-
-    ProductFeatureEditView.prototype.tagName = 'div';
-
-    ProductFeatureEditView.prototype.template = app.BaseView.getTemplate('#tpl-feature-edit');
-
-    ProductFeatureEditView.prototype.isModalEditView = function() {
-      return true;
-    };
-
-    ProductFeatureEditView.prototype.render = function() {
-      this.$el.empty();
-      this.$el.html(this.template({
-        m: this.model.toJSON()
-      }));
-      $('#modal-temp-placeholder').html(this.el);
-      (new app.LookupDropDownView({
-        el: '#feature-prodcategory',
-        collection: this.options.productcats
-      })).render();
-      (new app.LookupDropDownView({
-        el: '#feature-category',
-        collection: this.options.featurecats
-      })).render();
-      (new app.LookupDropDownView({
-        el: '#feature-datatype',
-        collection: this.options.datatypes
-      })).render();
-      if (this.model.has('product_category_id')) {
-        this.$("#feature-prodcategory option[value='" + this.model.get('product_category_id') + "']").attr('selected', "selected");
-      }
-      if (this.model.has('feature_category_id')) {
-        this.$("#feature-category option[value='" + this.model.get('feature_category_id') + "']").attr('selected', "selected");
-      }
-      if (this.model.has('data_type')) {
-        this.$("#feature-datatype option[value='" + this.model.get('data_type') + "']").attr('selected', "selected");
-      }
-      this.$('#modal-feature-edit').modal();
-      return this;
-    };
-
-    ProductFeatureEditView.prototype.hideModal = function() {
-      return this.$('#modal-feature-edit').modal('hide');
-    };
-
-    ProductFeatureEditView.prototype.readInputs = function() {
-      return this.model.set({
-        name: this.$('#feature-name').val(),
-        data_type: this.$('#feature-datatype').val(),
-        importance: this.$('#feature-importance').val(),
-        description: this.$('#feature-desc').val(),
-        product_category_id: this.$('#feature-prodcategory').val(),
-        feature_category_id: this.$('#feature-category').val()
-      });
-    };
-
-    return ProductFeatureEditView;
-
-  })(app.TableItemEditView);
-
-  ProductFeatureRowView = (function(_super) {
-
-    __extends(ProductFeatureRowView, _super);
-
-    function ProductFeatureRowView() {
-      ProductFeatureRowView.__super__.constructor.apply(this, arguments);
-    }
-
-    ProductFeatureRowView.prototype.template = app.BaseView.getTemplate('#tpl-feature-row');
-
-    ProductFeatureRowView.prototype.initialize = function() {
-      var dt, fc, pc;
-      if (this.model.get('data_type') != null) {
-        dt = this.options.datatypes.get(this.model.get('data_type'));
-      }
-      if (dt != null) {
-        this.model.set({
-          dataTypeDesc: dt.get('name')
-        });
-      }
-      if (this.model.get('feature_category_id') != null) {
-        fc = this.options.featurecats.get(this.model.get('feature_category_id'));
-      }
-      if (fc != null) {
-        this.model.set({
-          featureCategory: fc.get('name')
-        });
-      }
-      if (this.model.get('product_category_id') != null) {
-        pc = this.options.productcats.get(this.model.get('product_category_id'));
-      }
-      if (pc != null) {
-        return this.model.set({
-          productCategory: pc.get('name')
-        });
-      }
-    };
-
-    return ProductFeatureRowView;
-
-  })(app.TableItemDisplayView);
-
   ProductCategoryNodeView = (function(_super) {
 
     __extends(ProductCategoryNodeView, _super);
@@ -589,15 +374,158 @@
 
   })(app.BaseView);
 
-  ProductFeaturesView = (function(_super) {
+  ProductFeatureRowView = (function(_super) {
 
-    __extends(ProductFeaturesView, _super);
+    __extends(ProductFeatureRowView, _super);
 
-    function ProductFeaturesView() {
-      ProductFeaturesView.__super__.constructor.apply(this, arguments);
+    function ProductFeatureRowView() {
+      ProductFeatureRowView.__super__.constructor.apply(this, arguments);
     }
 
-    return ProductFeaturesView;
+    ProductFeatureRowView.prototype.template = app.BaseView.getTemplate('#tpl-feature-row');
+
+    ProductFeatureRowView.prototype.initialize = function() {
+      var dt, fc;
+      if (this.model.get('data_type') != null) {
+        dt = this.options.datatypes.get(this.model.get('data_type'));
+      }
+      if (dt != null) {
+        this.model.set({
+          dataTypeDesc: dt.get('name')
+        });
+      }
+      if (this.model.get('feature_category_id') != null) {
+        fc = this.options.featurecats.get(this.model.get('feature_category_id'));
+      }
+      if (fc != null) {
+        return this.model.set({
+          featureCategory: fc.get('name')
+        });
+      }
+    };
+
+    return ProductFeatureRowView;
+
+  })(app.TableItemDisplayView);
+
+  ProductFeatureEditView = (function(_super) {
+
+    __extends(ProductFeatureEditView, _super);
+
+    function ProductFeatureEditView() {
+      ProductFeatureEditView.__super__.constructor.apply(this, arguments);
+    }
+
+    ProductFeatureEditView.prototype.tagName = 'div';
+
+    ProductFeatureEditView.prototype.template = app.BaseView.getTemplate('#tpl-feature-edit');
+
+    ProductFeatureEditView.prototype.isModalEditView = function() {
+      return true;
+    };
+
+    ProductFeatureEditView.prototype.render = function() {
+      this.$el.empty();
+      this.$el.html(this.template({
+        m: this.model.toJSON()
+      }));
+      $('#modal-temp-placeholder').html(this.el);
+      (new app.LookupDropDownView({
+        el: '#feature-category',
+        collection: this.options.featurecats
+      })).render();
+      (new app.LookupDropDownView({
+        el: '#feature-datatype',
+        collection: this.options.datatypes
+      })).render();
+      if (this.model.has('feature_category_id')) {
+        this.$("#feature-category option[value='" + this.model.get('feature_category_id') + "']").attr('selected', "selected");
+      }
+      if (this.model.has('data_type')) {
+        this.$("#feature-datatype option[value='" + this.model.get('data_type') + "']").attr('selected', "selected");
+      }
+      this.$('#modal-feature-edit').modal();
+      return this;
+    };
+
+    ProductFeatureEditView.prototype.hideModal = function() {
+      return this.$('#modal-feature-edit').modal('hide');
+    };
+
+    ProductFeatureEditView.prototype.readInputs = function() {
+      return this.model.set({
+        name: this.$('#feature-name').val(),
+        data_type: this.$('#feature-datatype').val(),
+        importance: this.$('#feature-importance').val(),
+        description: this.$('#feature-desc').val(),
+        feature_category_id: this.$('#feature-category').val()
+      });
+    };
+
+    return ProductFeatureEditView;
+
+  })(app.TableItemEditView);
+
+  ProductFeatureResultView = (function(_super) {
+
+    __extends(ProductFeatureResultView, _super);
+
+    function ProductFeatureResultView() {
+      ProductFeatureResultView.__super__.constructor.apply(this, arguments);
+    }
+
+    ProductFeatureResultView.prototype.createItemDisplayView = function(model) {
+      return new ProductFeatureRowView({
+        model: model,
+        productcats: this.categories,
+        featurecats: this.featurecats,
+        datatypes: this.datatypes
+      });
+    };
+
+    ProductFeatureResultView.prototype.createItemEditView = function(model) {
+      return new ProductFeatureEditView({
+        model: model,
+        productcats: this.categories,
+        featurecats: this.featurecats,
+        datatypes: this.datatypes
+      });
+    };
+
+    ProductFeatureResultView.prototype.createEmptyModel = function() {
+      return new app.ProductFeature({
+        name: '',
+        importance: 0,
+        product_category_id: this.productCategoryId
+      });
+    };
+
+    ProductFeatureResultView.prototype.initialize = function() {
+      ProductFeatureResultView.__super__.initialize.apply(this, arguments);
+      this.categories = new app.LookupEntries(null, {
+        url: app.lookupApiUrl.get('category')
+      });
+      this.featurecats = new app.LookupEntries(null, {
+        url: app.lookupApiUrl.get('featurecat')
+      });
+      this.datatypes = new app.LookupEntries(null, {
+        url: app.lookupApiUrl.get('datatype')
+      });
+      this.categories.fetch();
+      this.featurecats.fetch();
+      return this.datatypes.fetch();
+    };
+
+    ProductFeatureResultView.prototype.render = function() {
+      ProductFeatureResultView.__super__.render.apply(this, arguments);
+      if (this.productCategoryId > 0) {
+        return this.$('h3').html(this.categories.get(this.productCategoryId).get('name'));
+      }
+    };
+
+    ProductFeatureResultView.prototype.productCategoryId = -1;
+
+    return ProductFeatureResultView;
 
   })(app.SearchResultTableView);
 
@@ -612,14 +540,34 @@
     FeatureMainView.prototype.initialize = function() {
       this.productCategories = new app.ProductCategoryTree;
       this.productCategories.on('selected', this.selected, this);
+      this.features = new app.ProductFeatures;
       this.productCategoryView = new app.ProductCategoryAreaView({
         collection: this.productCategories
+      });
+      this.resultView = new app.ProductFeatureResultView({
+        el: 'div.right-area',
+        collection: this.features,
+        template: '#tpl-feature-results'
       });
       return this.productCategories.fetch();
     };
 
     FeatureMainView.prototype.selected = function(categoryId) {
-      return alert(categoryId);
+      var that;
+      that = this;
+      return $.ajax({
+        url: that.features.url + '/' + categoryId,
+        dataType: 'json',
+        success: function(resp) {
+          that.resultView.productCategoryId = categoryId;
+          return that.features.reset(resp);
+        }
+      });
+    };
+
+    FeatureMainView.prototype.close = function() {
+      if (this.productCategoryView != null) this.productCategoryView.close();
+      if (this.resultView != null) return this.resultView.close();
     };
 
     return FeatureMainView;
@@ -648,16 +596,6 @@
 
   this.app.FeatureCategoryRowView = FeatureCategoryRowView;
 
-  this.app.ProductFeatureView = ProductFeatureView;
-
-  this.app.ProductFeatureSearchView = ProductFeatureSearchView;
-
-  this.app.ProductFeatureResultView = ProductFeatureResultView;
-
-  this.app.ProductFeatureEditView = ProductFeatureEditView;
-
-  this.app.ProductCategoryRowView = ProductCategoryRowView;
-
   this.app.FeatureMainView = FeatureMainView;
 
   this.app.ProductCategoryAreaView = ProductCategoryAreaView;
@@ -665,5 +603,11 @@
   this.app.ProductCategoryTreeView = ProductCategoryTreeView;
 
   this.app.ProductCategoryNodeView = ProductCategoryNodeView;
+
+  this.app.ProductFeatureResultView = ProductFeatureResultView;
+
+  this.app.ProductFeatureEditView = ProductFeatureEditView;
+
+  this.app.ProductCategoryRowView = ProductCategoryRowView;
 
 }).call(this);

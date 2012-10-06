@@ -116,20 +116,36 @@ class Api_Admin_Controller extends Base_Controller {
 	}
 	
 	public function post_feature() {
+		
+		$returnFeature = array();
 		$feature = Input::json();
-		$productCategory = ProductCategory::find($feature->product_category_id);
-					
-		//TODO: Do some validation here before saving..
-		$dbFeature = new Feature();
-		$dbFeature->name = $feature->name;
-		$dbFeature->data_type = $feature->data_type;
-		$dbFeature->importance = $feature->importance;
-		$dbFeature->description = empty($feature->description) ? null: $feature->description;
-		$dbFeature->feature_category_id = $feature->feature_category_id;
-		
-		$productCategory->features()->insert($dbFeature);
-		
-		return $dbFeature->toJson();		
+		DB::transaction(function() use (&$feature, &$returnFeature) {
+			
+			// First save the feature...
+			$dbFeature = Feature::create(array(
+				'name' => $feature->name,
+				'data_type' => $feature->data_type,
+				'importance' => $feature->importance,
+				'description' => empty($feature->description) ? null: $feature->description,
+				'feature_category_id' => $feature->feature_category_id,				
+			));
+
+			
+			// Then add the link to product category feature...
+			$dbProdCatFeature = ProductCategoryFeature::create(array(
+				'product_category_id' => $feature->product_category_id,
+				'feature_id' => $dbFeature->id,
+				'enabled' => true
+			));
+			
+			// We need to remove empty 'id' field from Eloquent object...
+			$temp = $dbProdCatFeature->to_array();
+			unset($temp['id']);
+			
+			$returnFeature = array_merge($dbFeature->to_array(), $temp);								
+		});
+				
+		return json_encode($returnFeature);		
 	}
 	
 	public function put_feature() {
